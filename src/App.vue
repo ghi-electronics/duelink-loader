@@ -1,16 +1,78 @@
 <template>
-    <div id="progress-bar">
-        <div
-            :ref="(el) => $refs.progress = el"
-            class="h-1 bg-sky-500 dark:bg-lime-500 transition duration-1000 ease-linear opacity-0"
-        ></div>
+  <div class="page">
+    <!-- Header -->
+    <h1 class="title">DUELink Loader</h1>
+
+    <img
+      src="https://www.duelink.com/img/duelinklogo.webp"
+      alt="DUELink Logo"
+      class="logo"
+    />
+
+    <p class="subtitle">
+      These pages will help you with updating your DUELink modules.
+      Select the option that best suits your needs.
+    </p>
+
+    <!-- Two main options -->
+    <div class="card-container">
+      <div class="card">
+        <img
+          src="https://www.duelink.com/img/languages.webp"
+          alt="Languages"
+          class="card-image"
+        />
+        <p class="card-text">
+          This is what Python, JavaScript and other tethered languages use.
+          You will also use this with Standalone Scripts.
+        </p>
+
+        <a href="./official">
+          <button class="outline-button">
+            DUELink Update Steps
+          </button>
+        </a>
+      </div>
+
+      <div class="card">
+        <img
+          src="https://www.duelink.com/img/microblocks.webp"
+          alt="MicroBlocks"
+          class="card-image"
+        />
+        <p class="card-text">
+          MicroBlocks users will use this to update a single module
+          or a chain of DUELink modules.
+        </p>
+
+        <a href="./microblocks">
+          <button class="outline-button">
+            MicroBlocks Update Steps
+          </button>
+        </a>
+      </div>
     </div>
-    <div class="min-h-screen flex flex-col space-y-0.5">
-    
-        
+
+    <!-- Experienced users -->
+    <h2 class="section-title">Experienced users</h2>
+    <p class="subtitle">
+      If you know what you are doing, here are some shortcuts!
+    </p>
+
+    <div class="button-row">
+      <button class="outline-button">Erase All (Serial)</button>
+      <button class="outline-button">Erase All (DFU)</button>
+      <button class="outline-button">Load DUELink Firmware</button>
     </div>
-    
-   
+
+    <div class="button-row">
+      <button class="outline-button">Load MicroBlocks Firmware</button>
+    </div>
+
+    <div class="button-row">
+      <button class="outline-button">DFU Drivers</button>
+    </div>
+  </div>
 </template>
 
 <script setup>

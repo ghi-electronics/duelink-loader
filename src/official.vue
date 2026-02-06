@@ -1,14 +1,138 @@
 <template>
-  <div>
-    <h1>DUELink Official</h1>
+  <div class="page">
+    <h1 class="title">DUELink Loader</h1>
 
-    <button @click="connect">
-      Connect Device
-    </button>
-
-    <p v-if="status">
-      {{ status }}
+    <p class="subtitle">
+      This page will help in updating DUELink firmware on a single module
+      or on the entire chain of modules.
     </p>
+
+    <p class="subtitle">
+      If you are using MicroBlocks or Arduino on the first module in a chain,
+      you need to update all modules first and then upload the first module
+      with a different firmware.
+    </p>
+
+    <img
+      src="https://www.duelink.com/img/arduino-uno-r4-daisylinked.webp"
+      alt="Chained modules"
+      class="screenshot"
+    />
+
+    <hr class="divider" />
+
+    <!-- STEP 1 -->
+    <h2 class="section-title">Step 1 (Erase All)</h2>
+
+    <p class="subtitle">
+      Erase the module and enter DFU (Device Firmware Update) mode.
+    </p>
+
+    <div class="card-container">
+      <div class="card">
+        <img
+          src="https://www.duelink.com/img/catalog/mcduestem-b-1.webp"
+          alt="Module with USB"
+          class="card-image"
+        />
+        <p class="card-text">
+          If your module has a USB connector, just plug it in!
+        </p>
+      </div>
+
+      <div class="card">
+        <img
+          src="https://www.duelink.com/img/usbhook-rgb3.webp"
+          alt="USB Hook"
+          class="card-image"
+        />
+        <p class="card-text">
+          If your module has a <code>U</code> Uplink connector,
+          you need a USB adaptor, like USB Hook.
+        </p>
+      </div>
+    </div>
+
+    <p class="subtitle">
+      Click the <strong>Erase All</strong> button, then select the device.
+      You should only see one named
+      <em>DUELink Official</em> or <em>DUELink MicroBlocks</em>.
+    </p>
+
+    <img
+      src="https://www.duelink.com/img/console-connect-dfu.webp"
+      alt="Select DFU device"
+      class="screenshot"
+    />
+
+    <div class="button-row">
+      <button class="outline-button">
+        Erase All
+      </button>
+    </div>
+
+    <p class="subtitle">
+      If <strong>Erase All</strong> failed, visit the
+      <a href="https://www.duelink.com/docs/loader" target="_blank">
+        loader documentation page
+      </a>.
+    </p>
+
+    <hr class="divider" />
+
+    <!-- STEP 2 -->
+    <h2 class="section-title">Step 2 (Load Firmware)</h2>
+
+    <p class="subtitle">
+      This step will update the firmware on a single device,
+      or on the first device in a chain.
+    </p>
+
+    <p class="subtitle">
+      Click the button, then <strong>Connect</strong>.
+      Select the <em>DFU in FS Mode</em> device.
+      If using Windows, install the DFU driver first.
+    </p>
+
+    <img
+      src="https://www.duelink.com/img/console-connect-dfu.webp"
+      alt="DFU selection"
+      class="screenshot"
+    />
+
+    <div class="button-row">
+      <button class="outline-button">
+        Load DUELink Firmware
+      </button>
+    </div>
+
+    <hr class="divider" />
+
+    <!-- STEP 3 -->
+    <h2 class="section-title">Step 3 (Load Drivers)</h2>
+
+    <p class="subtitle">
+      This step will automatically detect the connected module
+      and load the appropriate Driver Script.
+    </p>
+
+    <p class="subtitle">
+      Click the <strong>Load Driver Script</strong> button,
+      then select the device. You should only see one named
+      <em>DUELink Official</em>.
+    </p>
+
+    <img
+      src="https://www.duelink.com/img/console-connect-dfu.webp"
+      alt="Driver selection"
+      class="screenshot"
+    />
+
+    <div class="button-row">
+      <button class="outline-button">
+        Load Driver Script
+      </button>
+    </div>
   </div>
 </template>
 
@@ -35,3 +159,7 @@ async function connect() {
   }
 }
 </script>
+
+<style scoped>
+
+</style>

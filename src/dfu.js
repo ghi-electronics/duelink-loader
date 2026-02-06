@@ -1,6 +1,6 @@
 import './css/common.css'
 import './css/dialog.css'
 import { createApp } from 'vue'
-import official from './official.vue'
+import dfu from './dfu.vue'
 
-createApp(official).mount('#app')
+createApp(dfu).mount('#app')
