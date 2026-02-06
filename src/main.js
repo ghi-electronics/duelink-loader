@@ -1,6 +1,7 @@
 import './css/main.css';
 import 'tippy.js/dist/tippy.css';
 import './css/tippy.css';
+import './css/dialog.css'
 import { createApp } from 'vue';
 import App from './App.vue';
 import vClickOutside from 'click-outside-vue3';
