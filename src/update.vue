@@ -70,6 +70,21 @@
 
     <img src="/img/console-connect-dfu.webp" alt="DFU selection" class="screenshot" />
 
+
+    <div v-if="dfu" class="version-select">
+      <label for="version-select">
+        Select firmware version:
+      </label>
+
+      <select id="version-select" v-model="selectedVersionIndex">
+        <option v-for="(v, index) in versions" :key="v.id" :value="index">
+          {{ v.name }}
+        </option>
+      </select>
+
+      <!-- <div style="margin-top: 10px;"> <strong>Selected URL:</strong> <div>{{ selectedVersion?.url }}</div> </div>  -->
+    </div>
+
     <div class="button-row">
       <button class="outline-button" @click="fn_load_firmware">
         Load DUELink Firmware/Driver
@@ -107,6 +122,8 @@
       </button>
     </div>
 
+
+
     <!-- Custom MessageBox-->
     <div v-if="msg_box_erase_all_dms_confirm_final" class="overlay">
       <div class="dialog">
@@ -124,7 +141,7 @@
         </div>
       </div>
     </div>
-    <!--Erase all completed-->    
+    <!--Erase all completed-->
     <div v-if="msg_box_success" class="overlay">
       <div class="dialog">
         <div class="dialog-title-success">
@@ -132,7 +149,7 @@
           Success
         </div>
         <div class="dialog-body">
-          <p>{{msg_box_success_body_text}}</p>
+          <p>{{ msg_box_success_body_text }}</p>
         </div>
 
         <div class="dialog-buttons">
@@ -151,13 +168,13 @@
           Failed
         </div>
         <div class="dialog-body">
-          <p>{{msg_box_failed_body_text}}</p>
+          <p>{{ msg_box_failed_body_text }}</p>
         </div>
 
         <div class="dialog-buttons">
           <button class="no" @click="
             msg_box_failed = false;
-          
+
           ">Close</button>
         </div>
       </div>
@@ -207,8 +224,8 @@
             to the latest firmware.)
           </p>
           <br>
-          <p>Do you want to load <a target="_blank"
-              :href="webSerial.update_driver_path.value">this driver</a>?<br><br></p>
+          <p>Do you want to load <a target="_blank" :href="webSerial.update_driver_path.value">this driver</a>?<br><br>
+          </p>
         </div>
         <div class="dialog-buttons">
           <button class="yes" @click="do_update_driver_final_yes">Yes</button>
@@ -256,6 +273,10 @@ const $refs = { editor: null, filename: null, input: null, progress: null };
 const emitter = mitt();
 
 const webSerial = useWebSerial($refs, emitter);
+
+onMounted(async () => {
+  await loadDfu();
+});
 
 const status = ref('')
 const state = ref('')
@@ -497,7 +518,25 @@ const do_update_driver_confirm_final_text1 = ref("");
 const do_update_driver_confirm_final_text2 = ref("");
 const do_update_driver_confirm_final_text3 = ref("");
 
-loadDfu()
+//loadDfu()
+
+const dfu = computed(() => {
+  return availableDfu["DUELink"];
+});
+
+// selected version index
+const selectedVersionIndex = ref(0);
+
+const versions = computed(() => {
+  if (!dfu.value?.versions) return [];
+
+  return [...dfu.value.versions].sort((a, b) => b.id - a.id);
+});
+
+// selected version object
+const selectedVersion = computed(() => {
+  return versions.value[selectedVersionIndex.value] || null;
+});
 
 const firmwareMatches = ref(true);
 
@@ -520,20 +559,10 @@ async function loadDfu() {
   }
 }
 
-async function loadFirmwareForKey(key) {
-  const entry = availableDfu[key];
-
-  if (!entry || !Array.isArray(entry.versions) || entry.versions.length === 0) {
-    console.warn('No firmware versions found for', key);
-    return;
-  }
-
-  // Pick latest version by highest id
-  const latest = entry.versions.reduce((a, b) =>
-    b.id > a.id ? b : a
-  );
-
-  const url = latest.url;
+async function loadFirmwareForKey() {
+  
+  const selected = versions?.value[selectedVersionIndex.value] 
+  const url = selected?.url;
 
   // 👇 This is what you asked for
   console.log('Firmware URL:', url);
@@ -547,17 +576,17 @@ async function loadFirmwareForKey(key) {
     const blob = await response.blob();
     const data = await blob.arrayBuffer();
 
-    entry.image = data;
+    dfu.image = data;
 
     console.log('Firmware downloaded and ready');
   } catch (err) {
     console.error('Failed to download firmware', err);
-    entry.image = null;
+    dfu.image = null;
   }
 }
 
-async function writeFirmware(key) {
-  const entry = availableDfu[key];
+async function writeFirmware() {
+  const entry = dfu;
   await performDfuFirmwareUpgrade(entry.image);
 }
 
@@ -571,8 +600,8 @@ async function fn_load_firmware() {
     progressbar_standard_text.value = "Please wait..."
     progressbar_standard.value = true
 
-    await loadFirmwareForKey("DUELink")
-    await writeFirmware("DUELink")
+    await loadFirmwareForKey()
+    await writeFirmware()
 
     progressbar_standard.value = false
 
@@ -860,4 +889,14 @@ async function connect() {
 }
 </script>
 
-<style scoped></style>
+<style scoped>
+.version-select {
+  font-size: 1.1em;
+}
+
+.version-select select {
+  font-size: 1.1em;
+  padding: 4px 6px;
+}
+
+</style>
