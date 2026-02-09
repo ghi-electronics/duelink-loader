@@ -3,7 +3,7 @@
     <h1 class="title">DUELink Loader</h1>
 
     <img
-      src="https://www.duelink.com/img/duelinklogo.webp"
+      src="./assets/duelinklogo.webp"
       alt="DUELink Logo"
       class="logo"
     />
@@ -20,7 +20,7 @@
     </p>
 
     <img
-      src="https://www.duelink.com/img/arduino-uno-r4-daisylinked.webp"
+      src="./assets/arduino-uno-r4-daisylinked.webp"
       alt="Chained modules"
       class="screenshot"
     />
@@ -31,7 +31,7 @@
     </p>
 
     <img
-      src="https://www.duelink.com/img/device-manager-dfu.webp"
+      src="./assets/device-manager-dfu.webp"
       alt="Windows Device Manager DFU"
       class="screenshot"
     />
@@ -40,7 +40,7 @@
     <div class="card-container">
       <div class="card">
         <img
-          src="https://www.duelink.com/img/catalog/mcduestem-b-1.webp"
+          src="./assets/catalog/mcduestem-b-1.webp"
           alt="USB module"
           class="card-image"
         />
@@ -51,7 +51,7 @@
 
       <div class="card">
         <img
-          src="https://www.duelink.com/img/usbhook-rgb3.webp"
+          src="./assets/usbhook-rgb3.webp"
           alt="USB Hook"
           class="card-image"
         />
@@ -69,7 +69,7 @@
     </p>
 
     <img
-      src="https://www.duelink.com/img/console-connect-dfu.webp"
+      src="./assets/console-connect-dfu.webp"
       alt="Select DFU device"
       class="screenshot"
     />
@@ -97,7 +97,7 @@
     </p>
 
     <img
-      src="https://www.duelink.com/img/console-connect-dfu.webp"
+      src="./assets/console-connect-dfu.webp"
       alt="DFU FS Mode"
       class="screenshot"
     />
@@ -121,7 +121,7 @@
     </p>
 
     <img
-      src="https://www.duelink.com/img/ldr-a-buttons.webp"
+      src="./assets/ldr-a-buttons.webp"
       alt="LDR / A buttons"
       class="screenshot"
     />
@@ -136,7 +136,7 @@
     </p>
 
     <img
-      src="https://www.duelink.com/img/module-loader-pads.webp"
+      src="./assets/module-loader-pads.webp"
       alt="Loader pads"
       class="screenshot"
     />
@@ -147,13 +147,13 @@
     </p>
 
     <img
-      src="https://www.duelink.com/img/boot-mode.webp"
+      src="./assets/boot-mode.webp"
       alt="Boot mode wiring"
       class="screenshot"
     />
 
     <img
-      src="https://www.duelink.com/img/usbhook-rgb3.webp"
+      src="./assets/usbhook-rgb3.webp"
       alt="USB Hook"
       class="screenshot"
     />
@@ -167,7 +167,7 @@
     </p>
 
     <img
-      src="https://www.duelink.com/img/console-connect-dfu.webp"
+      src="./assets/console-connect-dfu.webp"
       alt="DFU FS Mode"
       class="screenshot"
     />
@@ -186,7 +186,7 @@
     <div class="card-container">
       <div class="card">
         <img
-          src="https://www.duelink.com/img/languages.webp"
+          src="./assets/languages.webp"
           alt="DUELink Official"
           class="card-image"
         />
@@ -203,7 +203,7 @@
 
       <div class="card">
         <img
-          src="https://www.duelink.com/img/microblocks.webp"
+          src="./assets/microblocks.webp"
           alt="MicroBlocks"
           class="card-image"
         />
@@ -220,7 +220,7 @@
 
       <div class="card">
         <img
-          src="https://www.duelink.com/img/arduino-logo.webp"
+          src="./assets/arduino-logo.webp"
           alt="Arduino"
           class="card-image"
         />

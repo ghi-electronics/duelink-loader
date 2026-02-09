@@ -4,7 +4,7 @@
     <h1 class="title">DUELink Loader</h1>
 
     <img
-      src="https://www.duelink.com/img/duelinklogo.webp"
+      src="./assets/duelinklogo.webp"
       alt="DUELink Logo"
       class="logo"
     />
@@ -18,7 +18,7 @@
     <div class="card-container">
       <div class="card">
         <img
-          src="https://www.duelink.com/img/languages.webp"
+          src="./assets/languages.webp"
           alt="Languages"
           class="card-image"
         />
@@ -36,7 +36,7 @@
 
       <div class="card">
         <img
-          src="https://www.duelink.com/img/microblocks.webp"
+          src="./assets/microblocks.webp"
           alt="MicroBlocks"
           class="card-image"
         />
