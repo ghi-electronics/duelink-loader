@@ -111,7 +111,7 @@
           Warning
         </div>
         <div class="dialog-body">
-          <p>{{ dms_confirm_final_text }}<br><br></p>
+         <p>{{ dms_confirm_final_text }}<br><br>{{ ERASE_ALL_DMS_CONFIRM_FINAL_TEXT2 }}<br></p>
         </div>
 
         <div class="dialog-buttons">
@@ -230,7 +230,8 @@ const progressbar_standard = ref(false);
 
 const percent_tmp = ref(0);
 
-const ERASE_ALL_DMS_CONFIRM_FINAL_TEXT = "Firmware detected.\nAre you sure you want to erase all?";
+const ERASE_ALL_DMS_CONFIRM_FINAL_TEXT = "Firmware detected.";
+const ERASE_ALL_DMS_CONFIRM_FINAL_TEXT2 = "Are you sure you want to erase all?";
 const dms_confirm_final_text = ref(ERASE_ALL_DMS_CONFIRM_FINAL_TEXT);
 
 //Erase all stuff
