@@ -18,8 +18,7 @@ export default defineConfig({
         
         rollupOptions: {
             input: {
-                main: resolve(__dirname, 'index.html'),
-                dfu: resolve(__dirname, 'dfu.html'),
+                main: resolve(__dirname, 'index.html'),                
                 update: resolve(__dirname, 'update.html'),
                 microblocks: resolve(__dirname, 'microblocks.html'),
             },
