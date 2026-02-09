@@ -6,7 +6,7 @@
       This page will help in updating DUELink firmware and its related Driver.
     </p>
 
-    
+
     <hr class="divider" />
 
     <!-- STEP 1 -->
@@ -64,7 +64,8 @@
     </p>
 
     <p class="subtitle">
-      If using Windows, <a href="https://www.duelink.com/bin/usb-drivers/win-usb-dfu.zip" target="_blank">download</a> and install the DFU driver first.
+      If using Windows, <a href="https://www.duelink.com/bin/usb-drivers/win-usb-dfu.zip" target="_blank">download</a>
+      and install the DFU driver first.
     </p>
 
     <img src="https://www.duelink.com/img/console-connect-dfu.webp" alt="DFU selection" class="screenshot" />
@@ -73,12 +74,12 @@
       <button class="outline-button" @click="fn_load_firmware">
         Load DUELink Firmware/Driver
       </button>
-      
+
       <hr class="divider" />
 
       <p class="subtitle">
-        The update steps are now complete on a single device.<br/>
-        <br/>
+        The update steps are now complete on a single device.<br />
+        <br />
         Continue to step 3 if you have multiple devices in a chain that you want to update.
       </p>
     </div>
@@ -106,7 +107,7 @@
       </button>
     </div>
 
-    <!-- Custom MessageBox-->    
+    <!-- Custom MessageBox-->
     <div v-if="msg_box_erase_all_dms_confirm_final" class="overlay">
       <div class="dialog">
         <div class="dialog-title">
@@ -123,33 +124,107 @@
         </div>
       </div>
     </div>
-    <!--Erase all completed-->
-    <div v-if="msg_box_erase_all_dms_finished" class="overlay">
+    <!--Erase all completed-->    
+    <div v-if="msg_box_success" class="overlay">
       <div class="dialog">
         <div class="dialog-title-success">
           <i class="fas fa-check-circle" style="color: green; margin-right: 8px;"></i>
           Success
         </div>
         <div class="dialog-body">
-          <p>"Erase All" operation completed.</p>
+          <p>{{msg_box_success_body_text}}</p>
         </div>
 
         <div class="dialog-buttons">
           <button class="no" @click="
-            msg_box_erase_all_dms_finished = false;
-          webSerial.isBusy = false;
+            msg_box_success = false;
+
           ">Close</button>
         </div>
       </div>
     </div>
-    <!--Progress bar progressbar_erase_all-->
-    <div v-if="progressbar_erase_all" class="overlay">
+
+    <div v-if="msg_box_failed" class="overlay">
+      <div class="dialog">
+        <div class="dialog-title">
+          <i class="fas fa-exclamation-triangle" style="color: yellow; margin-right: 8px;"></i>
+          Failed
+        </div>
+        <div class="dialog-body">
+          <p>{{msg_box_failed_body_text}}</p>
+        </div>
+
+        <div class="dialog-buttons">
+          <button class="no" @click="
+            msg_box_failed = false;
+          
+          ">Close</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- msg box ask to load driver -->
+    <div v-if="msg_box_load_driver_confirm" class="overlay">
+      <div class="dialog">
+        <div class="dialog-title">
+          <i class="fas fa-question-circle" style="color: white; margin-right: 8px;"></i>
+          Warning
+        </div>
+        <div class="dialog-body">
+          <p>
+            Firmware updated. Do you want to load driver?
+          </p>
+        </div>
+
+        <div class="dialog-buttons">
+          <button class="yes" @click="fn_load_driver_yes">Yes</button>
+          <button class="no" @click="msg_box_load_driver_confirm = false">No</button>
+        </div>
+      </div>
+    </div>
+
+    <!--message box shows driver information -->
+    <div v-if="msg_box_update_driver_show_detail" class="overlay">
+      <div class="dialog">
+        <div class="dialog-title">
+          <i class="fas fa-exclamation-triangle" style="color: yellow; margin-right: 8px;"></i>
+          Warning
+        </div>
+        <div class="dialog-body">
+          <p>{{ do_update_driver_confirm_final_text1 }}<br></p>
+          <!-- <p>{{ do_update_driver_confirm_final_text2 }}<br></p> -->
+          <p :style="{ color: firmwareMatches ? '#000000' : '#d9534f' }">
+            {{ do_update_driver_confirm_final_text3 }}<br>
+          </p>
+          <p v-if="firmwareMatches === false" class="firmware-warning">
+            (Recommend:
+            <button class="link-button underline" @click="
+              msg_box_update_driver_show_detail = false;
+            dfuModal.start();
+            ">
+              Update
+            </button>
+            to the latest firmware.)
+          </p>
+          <br>
+          <p>Do you want to load <a target="_blank"
+              :href="webSerial.update_driver_path.value">this driver</a>?<br><br></p>
+        </div>
+        <div class="dialog-buttons">
+          <button class="yes" @click="do_update_driver_final_yes">Yes</button>
+          <button class="no" @click="do_update_driver_final_no">No</button>
+        </div>
+      </div>
+    </div>
+    <!--progressbar connect-->
+    <div v-if="progressbar_standard" class="overlay">
       <div class="dialog" style="width: 25vw;">
         <div class="dialog-title" :class="{ 'dialog-title-success': percent_tmp === 100 }">
           <!--<i class="fas fa-exclamation-triangle" style="color: yellow; margin-right: 8px;"></i>-->
           <!-- Show icon only while writing -->
           <i v-if="percent_tmp < 100" class="fas fa-exclamation-triangle" style="margin-right: 8px;"></i>
-          {{ percent_tmp < 100 ? "Please wait..." : "Completed" }} </div>
+          {{ percent_tmp < 100 ? progressbar_standard_text : progressbar_standard_text }} </div>
+
             <div class="dialog-body">
               <!-- Progress bar -->
               <br>
@@ -157,8 +232,7 @@
                 <div class="update-driver-progress-bar" :style="{
                   width: percent_tmp + '%'
 
-                }">
-                </div>
+                }"></div>
               </div>
 
               <!-- Percent text -->
@@ -166,35 +240,10 @@
                 {{ percent_tmp }}%
               </div>
             </div>
+
         </div>
       </div>
-      <!--Progress bar progressbar_erase_all-->
-      <div v-if="progressbar_dfu_load_fw" class="overlay">
-        <div class="dialog" style="width: 25vw;">
-          <div class="dialog-title" :class="{ 'dialog-title-success': percent_tmp === 100 }">
-            <!--<i class="fas fa-exclamation-triangle" style="color: yellow; margin-right: 8px;"></i>-->
-            <!-- Show icon only while writing -->
-            <i v-if="percent_tmp < 100" class="fas fa-exclamation-triangle" style="margin-right: 8px;"></i>
-            {{ percent_tmp < 100 ? state : state }} </div>
-              <div class="dialog-body">
-                <!-- Progress bar -->
-                <br>
-                <div class="update-driver-progress-container">
-                  <div class="update-driver-progress-bar" :style="{
-                    width: percent_tmp + '%'
-
-                  }">
-                  </div>
-                </div>
-
-                <!-- Percent text -->
-                <div class="progress-text">
-                  {{ percent_tmp }}%
-                </div>
-              </div>
-          </div>
-        </div>
-      </div>
+    </div>
 </template>
 
 <script setup>
@@ -210,6 +259,9 @@ const webSerial = useWebSerial($refs, emitter);
 
 const status = ref('')
 const state = ref('')
+const progressbar_standard_text = ref('')
+const msg_box_success_body_text = ref('')
+const msg_box_failed_body_text = ref('')
 
 function sleep(ms) {
   return new Promise(resolve => setTimeout(resolve, ms));
@@ -221,16 +273,19 @@ const MB_PID = 0xF301;
 
 // Erase all
 const msg_box_erase_all_dms_confirm_final = ref(false);
-const msg_box_erase_all_dms_finished = ref(false);
-const progressbar_erase_all = ref(false);
-const progressbar_dfu_load_fw = ref(false);
+
+const msg_box_success = ref(false);
+const msg_box_failed = ref(false);
+const msg_box_load_driver_confirm = ref(false);
+const progressbar_standard = ref(false);
+const msg_box_update_driver_show_detail = ref(false);
 
 
 
 const percent_tmp = ref(0);
 const sel_dev_addr = ref(1);
 
-const ERASE_ALL_DMS_CONFIRM_FINAL_TEXT = "Firmware detected.\nAre you sure you want to erase all and enter DFU mode?";
+const ERASE_ALL_DMS_CONFIRM_FINAL_TEXT = "Firmware detected.\nAre you sure you want to erase all?";
 const dms_confirm_final_text = ref(ERASE_ALL_DMS_CONFIRM_FINAL_TEXT);
 
 //Erase all stuff
@@ -269,9 +324,10 @@ async function fn_erase_all_dms_final_yes() {
   msg_box_erase_all_dms_confirm_final.value = false;
 
   percent_tmp.value = 0
-  progressbar_erase_all.value = true
-  
-  
+  progressbar_standard_text.value = "Please wait..."
+  progressbar_standard.value = true
+
+
   await webSerial.eraseall_dms_execute();
 
   while (webSerial.eraseall_status_dms.value < 2) {
@@ -279,10 +335,13 @@ async function fn_erase_all_dms_final_yes() {
     percent_tmp.value = 50
   }
   percent_tmp.value = 100
+  progressbar_standard_text.value = "Done"
   await sleep(250);
 
-  progressbar_erase_all.value = false
-  msg_box_erase_all_dms_finished.value = true;
+  progressbar_standard.value = false
+
+  msg_box_success_body_text.value = "Erase all completed."
+  msg_box_success.value = true;
 
 }
 
@@ -297,6 +356,130 @@ async function fn_erase_all_dms_final_no() {
 
 }
 
+async function fn_load_driver_yes() {
+  msg_box_load_driver_confirm.value = false;
+
+  if (!webSerial.isConnected.value) {
+    webSerial.device_name.value = "";
+    webSerial.driver_ver.value = "";
+    webSerial.progress_percent.value = 0;
+    percent_tmp.value = 0;
+    webSerial.update_driver_status.value = 0;
+    //let tmp = webSerial.isBusy.value;
+    //webSerial.isBusy.value = true;
+
+    webSerial.connection_mode.value = 1; // driver mode
+    sel_dev_addr.value = webSerial.update_devaddr.value;
+    const ret = await webSerial.driver_connect();
+
+    if (ret) {
+      progressbar_standard_text.value = "Please wait..."
+      progressbar_standard.value = true;
+      let start = Date.now();
+      percent_tmp.value = 0;
+
+      while (webSerial.update_driver_status.value == 0) {
+        await sleep(100);
+
+        //percent_tmp.value = Math.floor((((Date.now() - start) / 4000) * 100));
+
+        //if (percent_tmp.value > 95)
+        //    percent_tmp.value = 95;
+        percent_tmp.value = webSerial.progress_percent.value;
+      }
+
+      await sleep(100);
+
+      if (webSerial.update_driver_status.value == 1) { // user select connected
+
+        let connected = false;
+        const expire = Date.now() + 4000;
+        while (!webSerial.isConnected.value || webSerial.device_name.value == "" || webSerial.driver_ver.value == "") {
+          await sleep(100);
+          if (Date.now() > expire) {
+            break;
+          }
+          //percent_tmp.value = Math.floor((((Date.now() - start) / 4000) * 100));
+
+          //if (percent_tmp.value > 95)
+          //    percent_tmp.value = 95;
+          percent_tmp.value = webSerial.progress_percent.value;
+        }
+
+        if (webSerial.isConnected.value && Date.now() < expire) {
+          connected = true;
+        }
+
+        if (connected) {
+          progressbar_standard_text.value = "Connected"
+          //do_update_driver_confirm_final_text1.value = webSerial.device_name.value + " detected. FW version: " + webSerial.version.value + ". Driver script version: " + webSerial.driver_ver.value
+          do_update_driver_confirm_final_text1.value = "Device Name: " + webSerial.device_name.value
+
+          // if (webSerial.driver_ver.value == "" || webSerial.driver_ver.value == "N/A")
+          //   do_update_driver_confirm_final_text2.value = "Driver Script Version: " + webSerial.driver_ver.value
+          // else
+          //   do_update_driver_confirm_final_text2.value = "Driver Script Version: " + Number(webSerial.driver_ver.value).toFixed(1)
+          do_update_driver_confirm_final_text3.value = "Firmware Version: " + webSerial.version.value;// + "-" +  (firmwareMatches.value)
+
+
+          msg_box_update_driver_show_detail.value = true;
+
+          percent_tmp.value = 100;
+          progressbar_standard.value = false;
+        }
+      }
+
+      progressbar_standard.value = false;
+      percent_tmp.value = 0;
+
+      //webSerial.isBusy.value = tmp;
+    }
+  }
+}
+
+async function do_update_driver_final_yes() {
+
+  msg_box_update_driver_show_detail.value = false;
+
+  progressbar_standard_text.value = "Please wait..."
+  progressbar_standard.value = true;
+  webSerial.progress_percent.value = 0;
+  percent_tmp.value = 0;
+
+  webSerial.driver_update(); // no await because just send message
+
+  while (webSerial.progress_percent.value != 100) {
+    await sleep(1);
+    percent_tmp.value = webSerial.progress_percent.value;
+  }
+
+  // reset every thing
+
+  webSerial.update_driver_status.value = 0;
+
+  // return to normal state: Disconnect
+  await webSerial.disconnect();
+  await sleep(10);
+
+  progressbar_standard.value = false;
+
+  msg_box_success_body_text.value = "Load driver completed."
+  msg_box_success.value = true;
+
+}
+
+
+async function do_update_driver_final_no() {
+  if (webSerial.isConnected.value) {
+    // Disconnect, we need to reconnect again because need get driver ver, pid....
+    webSerial.disconnect();
+
+    await sleep(100);
+  }
+
+  msg_box_update_driver_show_detail.value = false;
+
+}
 
 
 // DFU stuff
@@ -310,12 +493,18 @@ const BASE_ADDRESS = 0x08000000;
 
 let device;
 const isDfuConnected = ref(false);
-const progressbar_dfu = ref(false);
 const availableDfu = reactive({});
+const do_update_driver_confirm_final_text1 = ref("");
+const do_update_driver_confirm_final_text2 = ref("");
+const do_update_driver_confirm_final_text3 = ref("");
 
 loadDfu()
 
-//await loadFirmwareForKey("DUELink")
+const firmwareMatches = ref(true);
+
+function onFirmwareMatches(value) {
+  firmwareMatches.value = value;
+}
 
 async function loadDfu() {
   try {
@@ -380,13 +569,26 @@ async function fn_load_firmware() {
 
   if (isDfuConnected.value) {
     percent_tmp.value = 0
-    progressbar_dfu_load_fw.value = true
+    progressbar_standard_text.value = "Please wait..."
+    progressbar_standard.value = true
+
     await loadFirmwareForKey("DUELink")
     await writeFirmware("DUELink")
 
-    progressbar_dfu_load_fw.value = false
+    progressbar_standard.value = false
+
+    if (state.value == "Completed") {
+      msg_box_load_driver_confirm.value = true
+    }
+    else {
+      // TODO
+    }
+
   }
 }
+
+
+
 
 function progress(current, total) {
   //operation.value = current < 3 ? "Erasing" : "Loading";
@@ -481,6 +683,7 @@ async function waitForDfuIdle() {
 async function eraseTargetArea(totalSize) {
   // Calculate number of pages to erase.
   state.value = 'Erasing...';
+  progressbar_standard_text.value = state.value
   const pages = Math.ceil(totalSize / DFU_PAGE_ERASE_SIZE);
   console.log(`Erasing ${pages} flash page(s) starting at 0x${BASE_ADDRESS.toString(16)}...`);
   for (let i = 0; i < pages; i++) {
@@ -502,7 +705,8 @@ async function eraseTargetArea(totalSize) {
   }
 
   state.value = 'Erased.';
-  progress(0, 100);  
+  progressbar_standard_text.value = state.value
+  progress(0, 100);
   console.log("Erase complete.");
 }
 
@@ -591,13 +795,14 @@ async function performDfuFirmwareUpgrade(firmwareBuffer) {
 
     // this to make sure we don't see progress bar runs backward.
     percent_tmp.value = 0
-    progressbar_dfu_load_fw.value = false
+    progressbar_standard.value = false
 
     await sleep(250);
 
-    progressbar_dfu_load_fw.value = true
+    progressbar_standard.value = true
 
     state.value = 'Writing...';
+    progressbar_standard_text.value = state.value
     // -------- Step 1: Set the flash write pointer --------
     // Send block 0 with the "Download Memory" command (0x21)
     // Using the intended flash base address.
@@ -630,11 +835,12 @@ async function performDfuFirmwareUpgrade(firmwareBuffer) {
     console.log(`Sending final zero-length packet (block ${blockNumber}) to complete DFU transfer...`);
     await Go();
     console.log("Firmware update complete. The device should now program the firmware and reset.");
-    //state.value = "complete";
+    state.value = "Completed";
   } catch (err) {
     console.log("Firmware upgrade failed: " + err.message);
-    //state.value = "complete";
+    state.value = "Failed";
   }
+  progressbar_standard_text.value = state.value
 }
 
 
