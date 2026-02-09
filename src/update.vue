@@ -283,7 +283,6 @@ const msg_box_update_driver_show_detail = ref(false);
 
 
 const percent_tmp = ref(0);
-const sel_dev_addr = ref(1);
 
 const ERASE_ALL_DMS_CONFIRM_FINAL_TEXT = "Firmware detected.\nAre you sure you want to erase all?";
 const dms_confirm_final_text = ref(ERASE_ALL_DMS_CONFIRM_FINAL_TEXT);
@@ -365,11 +364,11 @@ async function fn_load_driver_yes() {
     webSerial.progress_percent.value = 0;
     percent_tmp.value = 0;
     webSerial.update_driver_status.value = 0;
+    webSerial.update_devaddr.value = 1
     //let tmp = webSerial.isBusy.value;
     //webSerial.isBusy.value = true;
 
-    webSerial.connection_mode.value = 1; // driver mode
-    sel_dev_addr.value = webSerial.update_devaddr.value;
+    webSerial.connection_mode.value = 1; // driver mode    
     const ret = await webSerial.driver_connect();
 
     if (ret) {
