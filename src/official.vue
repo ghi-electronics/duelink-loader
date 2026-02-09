@@ -3,26 +3,14 @@
     <h1 class="title">DUELink Loader</h1>
 
     <p class="subtitle">
-      This page will help in updating DUELink firmware on a single module
-      or on the entire chain of modules.
+      This page will help in updating DUELink firmware and its related Driver.
     </p>
 
-    <p class="subtitle">
-      If you are using MicroBlocks or Arduino on the first module in a chain,
-      you need to update all modules first and then upload the first module
-      with a different firmware.
-    </p>
-
-    <img src="https://www.duelink.com/img/arduino-uno-r4-daisylinked.webp" alt="Chained modules" class="screenshot" />
-
+    
     <hr class="divider" />
 
     <!-- STEP 1 -->
     <h2 class="section-title">Step 1 (Erase All)</h2>
-
-    <p class="subtitle">
-      Erase the module and enter DFU (Device Firmware Update) mode.
-    </p>
 
     <div class="card-container">
       <div class="card">
@@ -65,35 +53,43 @@
     <hr class="divider" />
 
     <!-- STEP 2 -->
-    <h2 class="section-title">Step 2 (Load Firmware)</h2>
+    <h2 class="section-title">Step 2 (Load Firmware/Driver)</h2>
 
     <p class="subtitle">
-      This step will update the firmware on a single device,
-      or on the first device in a chain.
+      This step will update the firmware on a single device, or on the first device in a chain.
     </p>
 
     <p class="subtitle">
-      Click the button, then <strong>Connect</strong>.
-      Select the <em>DFU in FS Mode</em> device.
-      If using Windows, install the DFU driver first.
+      Click the button below then select the <em>DFU in FS Mode</em> device and click <strong>Connect</strong>.
+    </p>
+
+    <p class="subtitle">
+      If using Windows, <a href="https://www.duelink.com/bin/usb-drivers/win-usb-dfu.zip" target="_blank">download</a> and install the DFU driver first.
     </p>
 
     <img src="https://www.duelink.com/img/console-connect-dfu.webp" alt="DFU selection" class="screenshot" />
 
     <div class="button-row">
       <button class="outline-button" @click="fn_load_firmware">
-        Load DUELink Firmware
+        Load DUELink Firmware/Driver
       </button>
+      
+      <hr class="divider" />
+
+      <p class="subtitle">
+        The update steps are now complete on a single device.<br/>
+        <br/>
+        Continue to step 3 if you have multiple devices in a chain that you want to update.
+      </p>
     </div>
 
     <hr class="divider" />
 
     <!-- STEP 3 -->
-    <h2 class="section-title">Step 3 (Load Drivers)</h2>
+    <h2 class="section-title">Step 3 (Update Chain)</h2>
 
     <p class="subtitle">
-      This step will automatically detect the connected module
-      and load the appropriate Driver Script.
+      This optional step is for updating all modules in a chain (Daisylink).
     </p>
 
     <p class="subtitle">
@@ -106,7 +102,7 @@
 
     <div class="button-row">
       <button class="outline-button">
-        Load Driver Script
+        Update Chain
       </button>
     </div>
 
@@ -135,8 +131,7 @@
           Success
         </div>
         <div class="dialog-body">
-          <p>"Erase All" operation completed. You are in DFU Mode now!<br><br>Click the Connect button on the next
-            window.</p>
+          <p>"Erase All" operation completed.</p>
         </div>
 
         <div class="dialog-buttons">

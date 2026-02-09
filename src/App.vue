@@ -53,25 +53,6 @@
       </div>
     </div>
 
-    <!-- Experienced users -->
-    <h2 class="section-title">Experienced users</h2>
-    <p class="subtitle">
-      If you know what you are doing, here are some shortcuts!
-    </p>
-
-    <div class="button-row">
-      <button class="outline-button">Erase All (Serial)</button>
-      <button class="outline-button">Erase All (DFU)</button>
-      <button class="outline-button">Load DUELink Firmware</button>
-    </div>
-
-    <div class="button-row">
-      <button class="outline-button">Load MicroBlocks Firmware</button>
-    </div>
-
-    <div class="button-row">
-      <button class="outline-button">DFU Drivers</button>
-    </div>
   </div>
 </template>
 

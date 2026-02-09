@@ -1,38 +1,20 @@
 <template>
   <div class="page">
-    <h1 class="title">MicroBlocks Loader</h1>
-
+    <h1 class="title">MicroBlocks Firmware Loader</h1>
+  <hr class="divider" />
     <!-- STEP 1 -->
     <h2 class="section-title">Step 1 (Erase All)</h2>
 
     <p class="subtitle">
-      Erase the module and enter DFU (Device Firmware Update) mode.
+      Connect your module using a USB cable.
     </p>
 
-    <div class="card-container">
-      <div class="card">
-        <img
+    <img
           src="https://www.duelink.com/img/catalog/mcduestem-b-1.webp"
           alt="Module with USB"
           class="card-image"
         />
-        <p class="card-text">
-          If your module has a USB connector, just plug it in!
-        </p>
-      </div>
 
-      <div class="card">
-        <img
-          src="https://www.duelink.com/img/usbhook-rgb3.webp"
-          alt="USB Hook"
-          class="card-image"
-        />
-        <p class="card-text">
-          If your module has a <code>U</code> Uplink connector,
-          you need a USB adaptor, like USB Hook.
-        </p>
-      </div>
-    </div>
 
     <p class="subtitle">
       Click the <strong>Erase All</strong> button, then select the device.
