@@ -10,7 +10,7 @@
     </p>
 
     <img
-          src="img/catalog/mcduestem-b-1.webp"
+          src="/img/catalog/mcduestem-b-1.webp"
           alt="Module with USB"
           class="card-image"
         />
@@ -23,7 +23,7 @@
     </p>
 
     <img
-      src="img/console-connect-dfu.webp"
+      src="/img/console-connect-dfu.webp"
       alt="Select DFU device"
       class="screenshot"
     />
@@ -57,7 +57,7 @@
     </p>
 
     <img
-      src="img/arduino-uno-r4-daisylinked.webp"
+      src="/img/arduino-uno-r4-daisylinked.webp"
       alt="Chained modules"
       class="screenshot"
     />
@@ -69,7 +69,7 @@
     </p>
 
     <img
-      src="img/console-connect-dfu.webp"
+      src="/img/console-connect-dfu.webp"
       alt="DFU selection"
       class="screenshot"
     />
