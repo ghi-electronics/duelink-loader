@@ -92,3 +92,71 @@
 .divider {
   margin: 50px 0;
 }
+
+/* =========================
+   Mobile responsiveness
+   ========================= */
+@media (max-width: 768px) {
+
+  .page {
+    padding: 12px;
+  }
+
+  .title {
+    font-size: 1.8em;
+  }
+
+  .section-title {
+    font-size: 1.4em;
+  }
+
+  .subtitle {
+    font-size: 1em;
+  }
+
+  /* Stack cards vertically */
+  .card-container {
+    flex-direction: column;
+  }
+
+  .card {
+    width: 100%;
+  }
+
+  .card-image {
+    max-width: 100%;
+    height: auto;
+  }
+
+  /* Images scale naturally */
+  .screenshot,
+  .logo {
+    max-width: 100%;
+    height: auto;
+  }
+
+  /* Buttons easier to tap */
+  .outline-button {
+    width: 100%;
+    margin: 8px 0;
+    font-size: 1.05em;
+    padding: 10px;
+  }
+
+  /* Dropdowns easier to use */
+  select {
+    width: 100%;
+    font-size: 1.05em;
+  }
+
+  label {
+    display: block;
+    margin-bottom: 6px;
+  }
+
+  /* Dialogs fit screen */
+  .dialog {
+    width: 90vw !important;
+    max-width: 90vw;
+  }
+}
