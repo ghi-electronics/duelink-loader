@@ -20,7 +20,7 @@ export default defineConfig({
             input: {
                 main: resolve(__dirname, 'index.html'),
                 dfu: resolve(__dirname, 'dfu.html'),
-                official: resolve(__dirname, 'official.html'),
+                update: resolve(__dirname, 'update.html'),
                 microblocks: resolve(__dirname, 'microblocks.html'),
             },
         },

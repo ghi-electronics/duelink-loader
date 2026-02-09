@@ -27,7 +27,7 @@
           You will also use this with Standalone Scripts.
         </p>
 
-        <a href="./official">
+        <a href="./update">
           <button class="outline-button">
             DUELink Update Steps
           </button>

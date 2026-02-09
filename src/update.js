@@ -1,6 +1,6 @@
 import './css/common.css'
 import './css/dialog.css'
 import { createApp } from 'vue'
-import official from './official.vue'
+import update from './update.vue'
 
-createApp(official).mount('#app')
+createApp(update).mount('#app')
