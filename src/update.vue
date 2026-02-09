@@ -208,10 +208,10 @@
           Warning
         </div>
         <div class="dialog-body">
-          <p>{{ do_update_driver_confirm_final_text1 }}<br></p>
+          <p>{{ do_update_driver_confirm_final_text1 }}</p>
           <!-- <p>{{ do_update_driver_confirm_final_text2 }}<br></p> -->
           <p :style="{ color: firmwareMatches ? '#000000' : '#d9534f' }">
-            {{ do_update_driver_confirm_final_text3 }}<br>
+            {{ do_update_driver_confirm_final_text3 }}
           </p>
           <p v-if="firmwareMatches === false" class="firmware-warning">
             (Recommend:
@@ -223,7 +223,7 @@
             to the latest firmware.)
           </p>
           <br>
-          <p>Do you want to load <a target="_blank" :href="webSerial.update_driver_path.value">this driver</a>?<br><br>
+          <p>Do you want to load <a target="_blank" :href="webSerial.update_driver_path.value">this driver</a>?<br>
           </p>
         </div>
         <div class="dialog-buttons">
