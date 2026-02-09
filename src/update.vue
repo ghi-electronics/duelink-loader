@@ -189,7 +189,7 @@
         </div>
         <div class="dialog-body">
           <p>
-            Firmware updated. Do you want to load driver?
+            Firmware {{ selectedVersion?.name }} updated. Do you want to load driver?
           </p>
         </div>
 
@@ -217,7 +217,6 @@
             (Recommend:
             <button class="link-button underline" @click="
               msg_box_update_driver_show_detail = false;
-            dfuModal.start();
             ">
               Update
             </button>
