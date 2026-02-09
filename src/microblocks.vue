@@ -10,7 +10,7 @@
     </p>
 
     <img
-          src="/img/catalog/mcduestem-b-1.webp"
+          src="/img/mcduestem-b-1.webp"
           alt="Module with USB"
           class="card-image"
         />
