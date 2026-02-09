@@ -14,14 +14,14 @@
 
     <div class="card-container">
       <div class="card">
-        <img src="./assets/mcduestem-b-1.webp" alt="Module with USB" class="card-image" />
+        <img src="img/mcduestem-b-1.webp" alt="Module with USB" class="card-image" />
         <p class="card-text">
           If your module has a USB connector, just plug it in!
         </p>
       </div>
 
       <div class="card">
-        <img src="./assets/usbhook-rgb3.webp" alt="USB Hook" class="card-image" />
+        <img src="img/usbhook-rgb3.webp" alt="USB Hook" class="card-image" />
         <p class="card-text">
           If your module has a <code>U</code> Uplink connector,
           you need a USB adaptor, like USB Hook.
@@ -35,7 +35,7 @@
       <em>DUELink Official</em> or <em>DUELink MicroBlocks</em>.
     </p>
 
-    <img src="./assets/console-connect-dfu.webp" alt="Select DFU device" class="screenshot" />
+    <img src="img/console-connect-dfu.webp" alt="Select DFU device" class="screenshot" />
 
     <div class="button-row">
       <button class="outline-button" @click="fn_erase_all_show_web_usb_connect()">
@@ -68,7 +68,7 @@
       and install the DFU driver first.
     </p>
 
-    <img src="./assets/console-connect-dfu.webp" alt="DFU selection" class="screenshot" />
+    <img src="img/console-connect-dfu.webp" alt="DFU selection" class="screenshot" />
 
     <div class="button-row">
       <button class="outline-button" @click="fn_load_firmware">
@@ -99,7 +99,7 @@
       <em>DUELink Official</em>.
     </p>
 
-    <img src="./assets/console-connect-dfu.webp" alt="Driver selection" class="screenshot" />
+    <img src="img/console-connect-dfu.webp" alt="Driver selection" class="screenshot" />
 
     <div class="button-row">
       <button class="outline-button">
