@@ -3,7 +3,7 @@
     <h1 class="title">DUELink Loader</h1>
 
     <p class="subtitle">
-      This page will help in updating DUELink firmware and its related Driver.
+      Update modules with official firmware and drivers!
     </p>
 
 
@@ -16,26 +16,25 @@
       <div class="card">
         <img src="/img/mcduestem-b-1.webp" alt="Module with USB" class="card-image" />
         <p class="card-text">
-          If your module has a USB connector, just plug it in!
+          Plug-in the USB cable directly...
         </p>
       </div>
 
       <div class="card">
         <img src="/img/usbhook-rgb3.webp" alt="USB Hook" class="card-image" />
         <p class="card-text">
-          If your module has a <code>U</code> Uplink connector,
-          you need a USB adaptor, like USB Hook.
+          ...or use an adapter on the Uplink connector.
         </p>
       </div>
     </div>
 
     <p class="subtitle">
-      Click the <strong>Erase All</strong> button, then select the device.
-      You should only see one named
-      <em>DUELink Official</em> or <em>DUELink MicroBlocks</em>.
+      Click the <strong>Erase All</strong> button. The pop-up window should have a device named <em>DUELink Official</em> or <em>DUELink MicroBlocks</em>.<br/>
+      <br/>
+      Select the device then click <strong>Connect</strong>.
     </p>
 
-    <img src="/img/console-connect-dfu.webp" alt="Select DFU device" class="screenshot" />
+    <img src="/img/console-connect-com.webp" alt="Select COM device" class="screenshot" />
 
     <div class="button-row">
       <button class="outline-button" @click="fn_erase_all_show_web_usb_connect()">
@@ -44,10 +43,7 @@
     </div>
 
     <p class="subtitle">
-      If <strong>Erase All</strong> failed, visit the
-      <a href="https://www.duelink.com/docs/loader" target="_blank">
-        loader documentation page
-      </a>.
+      If the pop-up window didn't show the needed device or if <strong>Erase All</strong> failed, visit the <a href="https://www.duelink.com/docs/loader" target="_blank"> loader documentation page</a>.
     </p>
 
     <hr class="divider" />
@@ -114,7 +110,7 @@
       <em>DUELink Official</em>.
     </p>
 
-    <img src="/img/console-connect-dfu.webp" alt="Driver selection" class="screenshot" />
+    <img src="/img/console-connect-com.webp" alt="COM selection" class="screenshot" />
 
     <div class="button-row">
       <button class="outline-button" @click="fn_update_chain">
