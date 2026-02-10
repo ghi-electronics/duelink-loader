@@ -1,32 +1,40 @@
 <template>
   <div class="page">
-    <h1 class="title">MicroBlocks Firmware Loader</h1>
-  <hr class="divider" />
+    <h1 class="title">DUELink Loader</h1>
+
+    <p class="subtitle">
+      Update modules with official firmware and drivers!
+    </p>
+
+
+    <hr class="divider" />
+
     <!-- STEP 1 -->
     <h2 class="section-title">Step 1 (Erase All)</h2>
 
+    <div class="card-container">
+      <div class="card">
+        <img src="/img/mcduestem-b-1.webp" alt="Module with USB" class="card-image" />
+        <p class="card-text">
+          Plug-in the USB cable directly...
+        </p>
+      </div>
+
+      <div class="card">
+        <img src="/img/usbhook-rgb3.webp" alt="USB Hook" class="card-image" />
+        <p class="card-text">
+          ...or use an adapter on the Uplink connector.
+        </p>
+      </div>
+    </div>
+
     <p class="subtitle">
-      Connect your module using a USB cable.
+      Click the <strong>Erase All</strong> button. The pop-up window should have a device named <em>DUELink Official</em> or <em>DUELink MicroBlocks</em>.<br/>
+      <br/>
+      Select the device then click <strong>Connect</strong>.
     </p>
 
-    <img
-          src="/img/mcduestem-b-1.webp"
-          alt="Module with USB"
-          class="card-image"
-        />
-
-
-    <p class="subtitle">
-      Click the <strong>Erase All</strong> button, then select the device.
-      You should only see one named <em>DUELink Official</em> or
-      <em>DUELink MicroBlocks</em>.
-    </p>
-
-    <img
-      src="/img/console-connect-com.webp"
-      alt="Select COM device"
-      class="screenshot"
-    />
+    <img src="/img/console-connect-com.webp" alt="Select COM device" class="screenshot" />
 
     <div class="button-row">
       <button class="outline-button" @click="fn_erase_all_show_web_usb_connect()">
@@ -35,44 +43,29 @@
     </div>
 
     <p class="subtitle">
-      If <strong>Erase All</strong> failed, visit the
-      <a href="https://www.duelink.com/docs/loader" target="_blank">
-        loader documentation page
-      </a>.
+      If the pop-up window didn't show the needed device or if <strong>Erase All</strong> failed, visit the <a href="https://www.duelink.com/docs/loader" target="_blank"> loader documentation page</a>.
     </p>
 
     <hr class="divider" />
 
     <!-- STEP 2 -->
-    <h2 class="section-title">Step 2 (Load Firmware)</h2>
+    <h2 class="section-title">Step 2 (Load Firmware/Driver)</h2>
 
     <p class="subtitle">
-      This step will load MicroBlocks firmware on a single device
-      or the first device in a chain.
+      This step will update the firmware on a single device, or on the first device in a chain.
     </p>
 
     <p class="subtitle">
-      If you need to update the DUELink firmware on chained modules,
-      do that first on the DUELink update page.
+      Click the button below then select the <em>DFU in FS Mode</em> device and click <strong>Connect</strong>.
     </p>
-
-    <img
-      src="/img/arduino-uno-r4-daisylinked.webp"
-      alt="Chained modules"
-      class="screenshot"
-    />
 
     <p class="subtitle">
-      Click the button, then <strong>Connect</strong>. Select the
-      <em>DFU in FS Mode</em> device.
-      If using Windows, install the DFU driver first.
+      If using Windows, <a href="https://www.duelink.com/bin/usb-drivers/win-usb-dfu.zip" target="_blank">download</a>
+      and install the DFU driver first.
     </p>
 
-    <img
-      src="/img/console-connect-dfu.webp"
-      alt="DFU selection"
-      class="screenshot"
-    />
+    <img src="/img/console-connect-dfu.webp" alt="DFU selection" class="screenshot" />
+
 
     <div v-if="dfu" class="version-select">
       <label for="version-select">
@@ -90,19 +83,43 @@
 
     <div class="button-row">
       <button class="outline-button" @click="fn_load_firmware">
-        Load MicroBlocks Firmware
+        Load DUELink Firmware/Driver
+      </button>
+
+      <hr class="divider" />
+
+      <p class="subtitle">
+        The update steps are now complete on a single device.<br />
+        <br />
+        Continue to step 3 if you have multiple devices in a chain that you want to update.
+      </p>
+    </div>
+
+    <hr class="divider" />
+
+    <!-- STEP 3 -->
+    <h2 class="section-title">Step 3 (Update Chain)</h2>
+
+    <p class="subtitle">
+      This optional step is for updating all modules in a chain (Daisylink).
+    </p>
+
+    <p class="subtitle">
+      Click the <strong>Load Driver Script</strong> button,
+      then select the device. You should only see one named
+      <em>DUELink Official</em>.
+    </p>
+
+    <img src="/img/console-connect-com.webp" alt="COM selection" class="screenshot" />
+
+    <div class="button-row">
+      <button class="outline-button">
+        Update Chain
       </button>
     </div>
 
-    <p class="subtitle">
-      Congratulations! You can now block-code using
-      <a
-        href="https://www.duelink.com/docs/language/microblocks"
-        target="_blank"
-      >
-        MicroBlocks
-      </a>.
-    </p>
+
+
     <!-- Custom MessageBox-->
     <div v-if="msg_box_erase_all_dms_confirm_final" class="overlay">
       <div class="dialog">
@@ -111,7 +128,7 @@
           Warning
         </div>
         <div class="dialog-body">
-         <p>{{ dms_confirm_final_text }}<br><br>{{ ERASE_ALL_DMS_CONFIRM_FINAL_TEXT2 }}<br></p>
+          <p>{{ dms_confirm_final_text }}<br><br>{{ ERASE_ALL_DMS_CONFIRM_FINAL_TEXT2 }}<br></p>
         </div>
 
         <div class="dialog-buttons">
@@ -158,7 +175,59 @@
         </div>
       </div>
     </div>
-   
+
+    <!-- msg box ask to load driver -->
+    <div v-if="msg_box_load_driver_confirm" class="overlay">
+      <div class="dialog">
+        <div class="dialog-title-success">
+          <i class="fas fa-question-circle" style="color: white; margin-right: 8px;"></i>
+          Success
+        </div>
+        <div class="dialog-body">
+          <p>
+            Firmware {{ selectedVersion?.name }} updated. <br><br>Do you want to load driver?
+          </p>
+        </div>
+
+        <div class="dialog-buttons">
+          <button class="yes" @click="fn_load_driver_yes">Yes</button>
+          <button class="no" @click="msg_box_load_driver_confirm = false">No</button>
+        </div>
+      </div>
+    </div>
+
+    <!--message box shows driver information -->
+    <div v-if="msg_box_update_driver_show_detail" class="overlay">
+      <div class="dialog">
+        <div class="dialog-title">
+          <i class="fas fa-exclamation-triangle" style="color: yellow; margin-right: 8px;"></i>
+          Warning
+        </div>
+        <div class="dialog-body">
+          <p>{{ do_update_driver_confirm_final_text1 }}</p>
+          <!-- <p>{{ do_update_driver_confirm_final_text2 }}<br></p> -->
+          <p :style="{ color: firmwareMatches ? '#000000' : '#d9534f' }">
+            {{ do_update_driver_confirm_final_text3 }}
+          </p>
+          <p v-if="firmwareMatches === false" class="firmware-warning">
+            (Recommend:
+            <button class="link-button underline" @click="
+              msg_box_update_driver_show_detail = false;
+            ">
+              Update
+            </button>
+            to the latest firmware.)
+          </p>
+          <br>
+          <p>Do you want to load <a target="_blank" :href="webSerial.update_driver_path.value">this driver</a>?<br>
+          </p>
+        </div>
+        <div class="dialog-buttons">
+          <button class="yes" @click="do_update_driver_final_yes">Yes</button>
+          <button class="no" @click="do_update_driver_final_no">No</button>
+        </div>
+      </div>
+    </div>
     <!--progressbar connect-->
     <div v-if="progressbar_standard" class="overlay">
       <div class="dialog" style="width: 25vw;">
@@ -186,7 +255,7 @@
 
         </div>
       </div>
-  </div>
+    </div>
 </template>
 
 <script setup>
@@ -223,8 +292,9 @@ const msg_box_erase_all_dms_confirm_final = ref(false);
 
 const msg_box_success = ref(false);
 const msg_box_failed = ref(false);
+const msg_box_load_driver_confirm = ref(false);
 const progressbar_standard = ref(false);
-
+const msg_box_update_driver_show_detail = ref(false);
 
 
 
@@ -298,9 +368,134 @@ async function fn_erase_all_dms_final_no() {
     await webSerial.disconnect();
     await sleep(250);
   }
+
+
+}
+
+async function fn_load_driver_yes() {
+  msg_box_load_driver_confirm.value = false;
+
+  if (!webSerial.isConnected.value) {
+    webSerial.device_name.value = "";
+    webSerial.driver_ver.value = "";
+    webSerial.progress_percent.value = 0;
+    percent_tmp.value = 0;
+    webSerial.update_driver_status.value = 0;
+    webSerial.update_devaddr.value = 1
+    //let tmp = webSerial.isBusy.value;
+    //webSerial.isBusy.value = true;
+
+    webSerial.connection_mode.value = 1; // driver mode    
+    const ret = await webSerial.driver_connect();
+
+    if (ret) {
+      progressbar_standard_text.value = "Please wait..."
+      progressbar_standard.value = true;
+      let start = Date.now();
+      percent_tmp.value = 0;
+
+      while (webSerial.update_driver_status.value == 0) {
+        await sleep(100);
+
+        //percent_tmp.value = Math.floor((((Date.now() - start) / 4000) * 100));
+
+        //if (percent_tmp.value > 95)
+        //    percent_tmp.value = 95;
+        percent_tmp.value = webSerial.progress_percent.value;
+      }
+
+      await sleep(100);
+
+      if (webSerial.update_driver_status.value == 1) { // user select connected
+
+        let connected = false;
+        const expire = Date.now() + 4000;
+        while (!webSerial.isConnected.value || webSerial.device_name.value == "" || webSerial.driver_ver.value == "") {
+          await sleep(100);
+          if (Date.now() > expire) {
+            break;
+          }
+          //percent_tmp.value = Math.floor((((Date.now() - start) / 4000) * 100));
+
+          //if (percent_tmp.value > 95)
+          //    percent_tmp.value = 95;
+          percent_tmp.value = webSerial.progress_percent.value;
+        }
+
+        if (webSerial.isConnected.value && Date.now() < expire) {
+          connected = true;
+        }
+
+        if (connected) {
+          progressbar_standard_text.value = "Connected"
+          //do_update_driver_confirm_final_text1.value = webSerial.device_name.value + " detected. FW version: " + webSerial.version.value + ". Driver script version: " + webSerial.driver_ver.value
+          do_update_driver_confirm_final_text1.value = "Device Name: " + webSerial.device_name.value
+
+          // if (webSerial.driver_ver.value == "" || webSerial.driver_ver.value == "N/A")
+          //   do_update_driver_confirm_final_text2.value = "Driver Script Version: " + webSerial.driver_ver.value
+          // else
+          //   do_update_driver_confirm_final_text2.value = "Driver Script Version: " + Number(webSerial.driver_ver.value).toFixed(1)
+          do_update_driver_confirm_final_text3.value = "Firmware Version: " + webSerial.version.value;// + "-" +  (firmwareMatches.value)
+
+
+          msg_box_update_driver_show_detail.value = true;
+
+          percent_tmp.value = 100;
+          progressbar_standard.value = false;
+        }
+      }
+
+      progressbar_standard.value = false;
+      percent_tmp.value = 0;
+
+      //webSerial.isBusy.value = tmp;
+    }
+  }
+}
+
+async function do_update_driver_final_yes() {
+
+  msg_box_update_driver_show_detail.value = false;
+
+  progressbar_standard_text.value = "Please wait..."
+  progressbar_standard.value = true;
+  webSerial.progress_percent.value = 0;
+  percent_tmp.value = 0;
+
+  webSerial.driver_update(); // no await because just send message
+
+  while (webSerial.progress_percent.value != 100) {
+    await sleep(1);
+    percent_tmp.value = webSerial.progress_percent.value;
+  }
+
+  // reset every thing
+
+  webSerial.update_driver_status.value = 0;
+
+  // return to normal state: Disconnect
+  await webSerial.disconnect();
+  await sleep(10);
+
+  progressbar_standard.value = false;
+
+  msg_box_success_body_text.value = "Load driver completed."
+  msg_box_success.value = true;
+
 }
 
 
+async function do_update_driver_final_no() {
+  if (webSerial.isConnected.value) {
+    // Disconnect, we need to reconnect again because need get driver ver, pid....
+    webSerial.disconnect();
+
+    await sleep(100);
+  }
+
+  msg_box_update_driver_show_detail.value = false;
+
+}
 
 
 // DFU stuff
@@ -316,13 +511,13 @@ let device;
 const isDfuConnected = ref(false);
 const availableDfu = reactive({});
 const do_update_driver_confirm_final_text1 = ref("");
-
+const do_update_driver_confirm_final_text2 = ref("");
 const do_update_driver_confirm_final_text3 = ref("");
 
 //loadDfu()
 
 const dfu = computed(() => {
-  return availableDfu["MicroBlock"];
+  return availableDfu["DUELink"];
 });
 
 // selected version index
@@ -407,14 +602,10 @@ async function fn_load_firmware() {
     progressbar_standard.value = false
 
     if (state.value == "Completed") {
-      const version_name = versions?.value[selectedVersionIndex.value].name
-      msg_box_success_body_text.value = "MicroBlocks Version " + version_name + " update completed."  
-      msg_box_success.value = true
+      msg_box_load_driver_confirm.value = true
     }
     else {
       // TODO
-      msg_box_failed.value = "MicroBlocks update failed."
-      msg_box_failed.value = true
     }
 
   }
