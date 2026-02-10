@@ -235,22 +235,25 @@
           <!--<i class="fas fa-exclamation-triangle" style="color: yellow; margin-right: 8px;"></i>-->
           <!-- Show icon only while writing -->
           <i v-if="percent_tmp < 100" class="fas fa-exclamation-triangle" style="margin-right: 8px;"></i>
-          {{ percent_tmp < 100 ? progressbar_standard_text : progressbar_standard_text }} </div>
+          {{ percent_tmp < 100 ? progressbar_title_text : progressbar_title_text }} </div>
 
             <div class="dialog-body">
-              <!-- Progress bar -->
+      
+              <div class="progress-text">
+                {{progressbar_body_text}}
+              </div>
               <br>
+              
               <div class="update-driver-progress-container">
                 <div class="update-driver-progress-bar" :style="{
                   width: percent_tmp + '%'
 
                 }"></div>
               </div>
-
-              <!-- Percent text -->
               <div class="progress-text">
                 {{ percent_tmp }}%
               </div>
+
             </div>
 
         </div>
@@ -275,7 +278,8 @@ onMounted(async () => {
 
 const status = ref('')
 const state = ref('')
-const progressbar_standard_text = ref('')
+const progressbar_body_text = ref('')
+const progressbar_title_text = ref('')
 const msg_box_success_body_text = ref('')
 const msg_box_failed_body_text = ref('')
 
@@ -340,7 +344,8 @@ async function fn_erase_all_dms_final_yes() {
   msg_box_erase_all_dms_confirm_final.value = false;
 
   percent_tmp.value = 0
-  progressbar_standard_text.value = "Please wait..."
+  progressbar_title_text.value = "Erase All"
+  progressbar_body_text.value = "Erasing...."
   progressbar_standard.value = true
 
 
@@ -351,7 +356,7 @@ async function fn_erase_all_dms_final_yes() {
     percent_tmp.value = 50
   }
   percent_tmp.value = 100
-  progressbar_standard_text.value = "Done"
+  progressbar_title_text.value = "Done"  
   await sleep(250);
 
   progressbar_standard.value = false
@@ -389,7 +394,8 @@ async function fn_load_driver_yes() {
     const ret = await webSerial.driver_connect();
 
     if (ret) {
-      progressbar_standard_text.value = "Please wait..."
+      progressbar_title_text.value =  "Driver Update"
+      progressbar_body_text.value =  "Connecting..."
       progressbar_standard.value = true;
       let start = Date.now();
       percent_tmp.value = 0;
@@ -426,8 +432,7 @@ async function fn_load_driver_yes() {
           connected = true;
         }
 
-        if (connected) {
-          progressbar_standard_text.value = "Connected"
+        if (connected) {          
           //do_update_driver_confirm_final_text1.value = webSerial.device_name.value + " detected. FW version: " + webSerial.version.value + ". Driver script version: " + webSerial.driver_ver.value
           do_update_driver_confirm_final_text1.value = "Device Name: " + webSerial.device_name.value
 
@@ -457,7 +462,8 @@ async function do_update_driver_final_yes() {
 
   msg_box_update_driver_show_detail.value = false;
 
-  progressbar_standard_text.value = "Please wait..."
+  progressbar_title_text.value =  "Driver Update"
+  progressbar_body_text.value = "Writing driver..."
   progressbar_standard.value = true;
   webSerial.progress_percent.value = 0;
   percent_tmp.value = 0;
@@ -506,7 +512,7 @@ async function do_connect() {
   const ret = await webSerial.connect(); // this just send a message, await or no, not really care
 
   if (ret) {
-    progressbar_standard_text.value = "Connecting to device 1..."
+    progressbar_body_text.value = "Connecting to device 1..."
     progressbar_standard.value = true;
 
     percent_tmp.value = 0;
@@ -524,7 +530,7 @@ async function do_connect() {
 
     if (webSerial.connect_status.value > 0) {
       percent_tmp.value = 99;
-      //progressbar_standard_text.value = "Connected."
+      //progressbar_body_text.value = "Connected."
       await sleep(100);
     }
 
@@ -545,6 +551,7 @@ async function do_connect() {
 
 async function fn_update_chain() {
 
+  progressbar_title_text.value = "Update Chain"
   if (webSerial.isConnected.value == false) {
 
     await do_connect();
@@ -556,7 +563,7 @@ async function fn_update_chain() {
   webSerial.clone_fw_status.value = 0
 
 
-  progressbar_standard_text.value = "Please wait..."
+  progressbar_body_text.value = "Please wait..."
   progressbar_standard.value = true;
   webSerial.progress_percent.value = 0;
   percent_tmp.value = 0;
@@ -572,7 +579,7 @@ async function fn_update_chain() {
   // wait for await
   while (webSerial.clone_fw_status.value == 0) {
     await sleep(100);
-    progressbar_standard_text.value = webSerial.progress_body_text.value
+    progressbar_body_text.value = webSerial.progress_body_text.value
     percent_tmp.value = webSerial.progress_percent.value
   }
 
@@ -701,10 +708,12 @@ async function fn_load_firmware() {
 
   if (isDfuConnected.value) {
     percent_tmp.value = 0
-    progressbar_standard_text.value = "Please wait..."
+    progressbar_title_text.value = "Firmware Update"
+    progressbar_body_text.value = "Fetching firmware url..."
     progressbar_standard.value = true
 
     await loadFirmwareForKey()
+    
     await writeFirmware()
 
     progressbar_standard.value = false
@@ -817,7 +826,7 @@ async function waitForDfuIdle() {
 async function eraseTargetArea(totalSize) {
   // Calculate number of pages to erase.
   state.value = 'Erasing...';
-  progressbar_standard_text.value = state.value
+  progressbar_body_text.value = state.value
   const pages = Math.ceil(totalSize / DFU_PAGE_ERASE_SIZE);
   console.log(`Erasing ${pages} flash page(s) starting at 0x${BASE_ADDRESS.toString(16)}...`);
   for (let i = 0; i < pages; i++) {
@@ -839,7 +848,7 @@ async function eraseTargetArea(totalSize) {
   }
 
   state.value = 'Erased.';
-  progressbar_standard_text.value = state.value
+  progressbar_body_text.value = state.value
   progress(0, 100);
   console.log("Erase complete.");
 }
@@ -936,7 +945,7 @@ async function performDfuFirmwareUpgrade(firmwareBuffer) {
     progressbar_standard.value = true
 
     state.value = 'Writing...';
-    progressbar_standard_text.value = state.value
+    progressbar_body_text.value = state.value
     // -------- Step 1: Set the flash write pointer --------
     // Send block 0 with the "Download Memory" command (0x21)
     // Using the intended flash base address.
@@ -974,7 +983,7 @@ async function performDfuFirmwareUpgrade(firmwareBuffer) {
     console.log("Firmware upgrade failed: " + err.message);
     state.value = "Failed";
   }
-  progressbar_standard_text.value = state.value
+  progressbar_body_text.value = state.value
 }
 
 

@@ -160,3 +160,7 @@
     max-width: 90vw;
   }
 }
+
+.progress-text {
+  white-space: pre-line;
+}

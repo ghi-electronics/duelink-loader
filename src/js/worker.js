@@ -510,36 +510,46 @@ async function do_driver_update() {
 }
 
 let clone_fw_single_status = 0
+let finished_str = "";
 async function clone_fw_single(from_addr) {
     //console.log(`Cloning from ${from_addr} to ${from_addr + 1}...`)    
-    postMessage({ event: 'progress_body_text', value: `Checking if device ${from_addr + 1} exists…` });
-    await write(`sel(${from_addr + 1})`, null, '\n', 1000)
+    postMessage({ event: 'progress_body_text', value: finished_str + `\nChecking if device ${from_addr + 1} exists…` });
+    try {
 
-    // try to read statled pin, if return 1 mean exist
-    // we need it because sel return "\r\n>", no value.
-    // When dread(0,1) then return "1\r\n>". it must be 1 then it is good
-    const result = await write(`Info(1)`)
+    
+        await write(`sel(${from_addr + 1})`, null, '\n', 1000)
 
-    if (result.length > 0) {
-        const ret = Number(result.pop());
-        if (ret > 0.1) {            
-            await write(`sel(${from_addr})`, null, '\n', 1000)
-            postMessage({ event: 'progress_body_text', value: `Cloning firmware from device ${from_addr} to device ${from_addr + 1}...` });
-            const cloned = await write(`clone()`, null, '\n', 30000)
+        // try to read statled pin, if return 1 mean exist
+        // we need it because sel return "\r\n>", no value.
+        // When dread(0,1) then return "1\r\n>". it must be 1 then it is good
+        const result = await write(`Info(1)`)
 
-            if (cloned.length > 0) {
-                const dev = Number(cloned.pop());
+        if (result.length > 0) {
+            const ret = Number(result.pop());
+            if (ret > 0.1) {            
+                await write(`sel(${from_addr})`, null, '\n', 1000)
+                postMessage({ event: 'progress_body_text', value: finished_str + `\nCloning firmware from device ${from_addr} to device ${from_addr + 1}...` });
+                const cloned = await write(`clone()`, null, '\n', 40000)
 
-                if (dev == from_addr + 1) {
-                    clone_fw_single_status = dev
-                    return clone_fw_single_status
+                if (cloned.length > 0) {
+                    const dev = Number(cloned.pop());
+
+                    if (dev == from_addr + 1) {
+                        clone_fw_single_status = dev
+                        return clone_fw_single_status
+                    }
                 }
             }
         }
+
+        await write(`sel(1)`)
+    }
+    catch {
+
     }
 
     // something wrong, select start 1
-    await write(`sel(1)`)
+    
     clone_fw_single_status = -1
     return clone_fw_single_status
 
@@ -550,6 +560,7 @@ async function do_clone_fw(add_start, add_end) {
     console.log(add_end);
     let d = add_start
 
+    finished_str = ""; // clear
 
     for (d = add_start; d < add_end; d++) {
         clone_fw_single_status = 0
@@ -580,7 +591,7 @@ async function do_clone_fw(add_start, add_end) {
 
 
             postMessage({ event: 'progress_percent', value: i });
-            postMessage({ event: 'progress_body_text', value: `Connecting to device ${d + 1}...` });
+            postMessage({ event: 'progress_body_text', value: finished_str + `\nConnecting to device ${d + 1}...` });
             update_progressbar_percent = false
             await do_driver_connect(d + 1)
             update_progressbar_percent = true
@@ -590,7 +601,7 @@ async function do_clone_fw(add_start, add_end) {
             if (i < 95)
                 i = i + 5
             postMessage({ event: 'progress_percent', value: i });
-            postMessage({ event: 'progress_body_text', value: `Found: ${update_device_name} at address: ${d + 1}. Loading the driver onto device...` });
+            postMessage({ event: 'progress_body_text', value: finished_str + `\nFound: ${update_device_name} at address (${d + 1})\nLoading the driver onto device...` });
             update_progressbar_percent = false
             await do_driver_update()
             update_progressbar_percent = true
@@ -600,8 +611,9 @@ async function do_clone_fw(add_start, add_end) {
                     i = 99
 
                 postMessage({ event: 'progress_percent', value: i });
-                postMessage({ event: 'progress_body_text', value: `Finishing loading the driver…` });
-
+                postMessage({ event: 'progress_body_text', value: finished_str + `\nFound: ${update_device_name} at address (${d + 1})\nFinishing loading the driver…` });
+                finished_str = finished_str + `Finished: ${update_device_name} at address (${d + 1})`
+                finished_str += '\n'
                 await sleep(2000)
             }
         }
