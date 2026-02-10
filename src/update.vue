@@ -502,41 +502,48 @@ async function do_update_driver_final_no() {
 }
 
 async function do_connect() {
-    webSerial.connect_status.value = 0;
-    webSerial.connection_mode.value = 0; // regular mode
-    webSerial.update_driver_status.value = 0; // reset update list
+  webSerial.connect_status.value = 0;
+  webSerial.connection_mode.value = 0; // regular mode
+  webSerial.update_driver_status.value = 0; // reset update list
+  percent_tmp.value = 0;
+  webSerial.progress_percent.value = 0;
+  const ret = await webSerial.connect(); // this just send a message, await or no, not really care
+
+  if (ret) {
+    progressbar_standard_text.value = "Please wait while connecting..."
+    progressbar_standard.value = true;
+
     percent_tmp.value = 0;
-    webSerial.progress_percent.value = 0;
-    const ret = await webSerial.connect();
+    while (webSerial.connect_status.value == 0) {
+      await sleep(100);
 
-    if (ret) {
-        progressbar_standard_text.value = "Please wait..."
-        progressbar_standard.value = true;
-        
-        percent_tmp.value = 0;
-        while (webSerial.connect_status.value == 0) {
-            await sleep(100); 
+      percent_tmp.value = webSerial.progress_percent.value;
 
-            percent_tmp.value = webSerial.progress_percent.value;
-
-            // when percent_tmp.value is 65, get version() then 100
-            // if 71 then failed
-            if (percent_tmp.value == 71) { // make sure it is stop
-                break;
-            }
-        }
-
-        if (webSerial.connect_status.value > 0) {
-            percent_tmp.value = 100;
-            progressbar_standard_text.value = "Connected."
-            await sleep(100); 
-        }
-        
-        
-        progressbar_standard.value = false;
-        percent_tmp.value = 0;
-        await sleep(100); // make sure connect_msgbox_progress is off
+      // when percent_tmp.value is 65, get version() then 100
+      // if 71 then failed
+      if (percent_tmp.value == 71) { // make sure it is stop
+        break;
+      }
     }
+
+    if (webSerial.connect_status.value > 0) {
+      percent_tmp.value = 100;
+      progressbar_standard_text.value = "Connected."
+      await sleep(100);
+    }
+
+
+    progressbar_standard.value = false;
+    percent_tmp.value = 0;
+    await sleep(100); // make sure connect_msgbox_progress is off
+
+    if (webSerial.connect_status.value < 0) {
+
+      msg_box_failed_body_text.value = "Connection failed"
+      msg_box_failed.value = true;
+
+    }
+  }
 
 }
 
@@ -563,19 +570,19 @@ async function fn_update_chain() {
 
   // do clone but no await
   webSerial.do_clone_fw(1, 3)
-
-
   webSerial.progress_percent.value = 0
 
 
   // wait for await
   while (webSerial.clone_fw_status.value == 0) {
-    await sleep(1000);
+    await sleep(100);
+    progressbar_standard_text.value = webSerial.progress_body_text.value
     percent_tmp.value = webSerial.progress_percent.value
   }
 
   await sleep(100);
   progressbar_standard.value = false;
+
 
   if (webSerial.clone_fw_status.value == 3)
     console.log("success")

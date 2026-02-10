@@ -537,10 +537,9 @@ async function clone_fw_single(from_addr) {
                     // Do update driver
                     
                     // sel cloned device
-                    //await write(`sel(${from_addr+1})`,null, '\n',1000)
-                    await do_driver_connect(from_addr+1)
-                    await do_driver_update()
-
+                    //postMessage({ event: 'progress_body_text', value: `Loading driver to device ${from_addr+1}` });
+                    //await do_driver_connect(from_addr+1)
+                    //await do_driver_update()
 
                     clone_fw_single_status = dev
                     return clone_fw_single_status
@@ -565,6 +564,7 @@ async function do_clone_fw(add_start, add_end) {
     for (d = add_start; d < add_end; d++)  {
         clone_fw_single_status = 0
         postMessage({ event: 'clone_fw_dev', value: (d+1) });
+        postMessage({ event: 'progress_body_text', value: `Cloning firmware from device ${d} to device ${d+1}...` });
 
         clone_fw_single(d)
         
@@ -586,6 +586,18 @@ async function do_clone_fw(add_start, add_end) {
         }
         else {
             postMessage({ event: 'progress_percent', value: 100 });
+            postMessage({ event: 'progress_body_text', value: `Device ${d+1} is cloned` });
+
+            await sleep(1000)      
+
+            postMessage({ event: 'progress_percent', value: 0 });
+            postMessage({ event: 'progress_body_text', value: `Connecting to device ${d+1}...` });
+            await do_driver_connect(d+1)
+
+            await sleep(1000)
+            postMessage({ event: 'progress_percent', value: 0 }); 
+            postMessage({ event: 'progress_body_text', value: `Loading the driver onto device ${d+1} - ${update_device_name}...` });
+            await do_driver_update()
         }
     }
 

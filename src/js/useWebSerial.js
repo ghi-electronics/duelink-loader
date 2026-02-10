@@ -29,6 +29,7 @@ export default function useWebSerial($refs, emitter) {
     const device_name = ref("");
     const progress_percent = ref(0);
     const update_driver_path = ref("");
+    const progress_body_text = ref("");
     const update_devaddr=ref(1);
     const connect_status=ref(0);
 
@@ -405,7 +406,11 @@ export default function useWebSerial($refs, emitter) {
 
             case 'progress_percent':
                 progress_percent.value = data.value;
-                break;    
+                break; 
+                
+            case 'progress_body_text':
+                progress_body_text.value = data.value;
+                break;
         }
     }
 
@@ -442,6 +447,7 @@ export default function useWebSerial($refs, emitter) {
         connection_mode,
         clone_fw_status,
         clone_fw_dev,
+        progress_body_text,
         // Methods
         connect,
         disconnect,
