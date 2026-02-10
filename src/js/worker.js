@@ -180,7 +180,7 @@ async function eraseall_dms_execute() {
 
         await do_sendescape();
         await sleep(400);
-        
+
         await writer.write(encoder.encode("reset(1)\n"));
         await sleep(100);
         await writer.write(encoder.encode("reset(1)\n"));
@@ -517,7 +517,7 @@ let clone_fw_single_status = 0
 let finished_str = "";
 async function clone_fw_single(from_addr) {
     //console.log(`Cloning from ${from_addr} to ${from_addr + 1}...`)    
-    postMessage({ event: 'progress_body_text', value: finished_str + `\nChecking if device (${from_addr + 1}) exists…` });
+    postMessage({ event: 'progress_body_text', value: finished_str + `\nChecking if device ${from_addr + 1} exists…` });
     try {
 
     
@@ -532,7 +532,7 @@ async function clone_fw_single(from_addr) {
             const ret = Number(result.pop());
             if (ret > 0.1) {            
                 await write(`sel(${from_addr})`, null, '\n', 1000)
-                postMessage({ event: 'progress_body_text', value: finished_str + `\nCloning firmware from device (${from_addr}) to device (${from_addr + 1})...` });
+                postMessage({ event: 'progress_body_text', value: finished_str + `\nCloning firmware from device ${from_addr} to device ${from_addr + 1}...` });
                 const cloned = await write(`clone()`, null, '\n', 40000)
 
                 if (cloned.length > 0) {
@@ -548,7 +548,7 @@ async function clone_fw_single(from_addr) {
 
         
         //postMessage({ event: 'progress_body_text', value: finished_str + `\nOnly ${from_addr} devices were found. Finishing update...` });
-        await write(`sel(1)`)
+        await write(`sel(1)`)        
     }
     catch {
 
@@ -608,7 +608,7 @@ async function do_clone_fw(add_start, add_end) {
             if (i < 95)
                 i = i + 5
             postMessage({ event: 'progress_percent', value: i });
-            postMessage({ event: 'progress_body_text', value: finished_str + `\nFound: ${update_device_name} at address (${d + 1})\nLoading the driver onto device...` });
+            postMessage({ event: 'progress_body_text', value: finished_str + `\nFound: ${update_device_name} at address ${d + 1}\nLoading the driver onto device...` });
             update_progressbar_percent = false
             await do_driver_update()
             update_progressbar_percent = true
@@ -618,7 +618,7 @@ async function do_clone_fw(add_start, add_end) {
                     i = 99
 
                 postMessage({ event: 'progress_percent', value: i });
-                postMessage({ event: 'progress_body_text', value: finished_str + `\nFound: ${update_device_name} at address (${d + 1})\nFinishing loading the driver…` });
+                postMessage({ event: 'progress_body_text', value: finished_str + `\nFound: ${update_device_name} at address ${d + 1}\nFinishing loading the driver…` });
                 finished_str = finished_str + `Finished: ${update_device_name} at address (${d + 1})`
                 finished_str += '\n'
                 
