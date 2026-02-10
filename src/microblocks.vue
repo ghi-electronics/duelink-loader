@@ -1,6 +1,22 @@
 <template>
   <div class="page">
     <h1 class="title">MicroBlocks Firmware Loader</h1>
+    
+    <p class="subtitle">
+      This page will load MicroBlocks firmware on a single device
+      or the first device in a chain.
+    </p>
+
+    <p class="subtitle">
+      If you need to update the DUELink firmware on chained modules,
+      do that first on the <a href="/update">DUELink update page</a>.
+    </p>
+
+    <img
+      src="/img/cincobit-daisylinked.webp"
+      alt="Chained modules"
+      class="screenshot"
+    />
   <hr class="divider" />
     <!-- STEP 1 -->
     <h2 class="section-title">Step 1 (Erase All)</h2>
@@ -46,21 +62,6 @@
     <!-- STEP 2 -->
     <h2 class="section-title">Step 2 (Load Firmware)</h2>
 
-    <p class="subtitle">
-      This step will load MicroBlocks firmware on a single device
-      or the first device in a chain.
-    </p>
-
-    <p class="subtitle">
-      If you need to update the DUELink firmware on chained modules,
-      do that first on the DUELink update page.
-    </p>
-
-    <img
-      src="/img/arduino-uno-r4-daisylinked.webp"
-      alt="Chained modules"
-      class="screenshot"
-    />
 
     <p class="subtitle">
       Click the button, then <strong>Connect</strong>. Select the
