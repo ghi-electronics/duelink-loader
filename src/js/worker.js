@@ -23,7 +23,7 @@ const DL_PID = 0xF300;
 const MB_PID = 0xF301;
 
 let dev_responsed = false;
-let update_progressbar_percent = false
+let update_progressbar_percent = true
 let do_driver_update_state = 0
 
 addEventListener('message', (e) => {

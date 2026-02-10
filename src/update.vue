@@ -160,7 +160,7 @@
     <div v-if="msg_box_failed" class="overlay">
       <div class="dialog">
         <div class="dialog-title">
-          <i class="fas fa-exclamation-triangle" style="color: yellow; margin-right: 8px;"></i>
+          <i class="fa-solid fa-triangle-exclamation" style="color: #f5c542; margin-right: 8px;"></i>
           Failed
         </div>
         <div class="dialog-body">
@@ -714,6 +714,8 @@ async function fn_load_firmware() {
     }
     else {
       // TODO
+      msg_box_failed_body_text.value = "Loading firmware failed!"
+      msg_box_failed.value = true;
     }
 
   }
