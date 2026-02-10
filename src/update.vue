@@ -14,7 +14,7 @@
 
     <div class="card-container">
       <div class="card">
-        <img src="/img/mcduestem-b-1.webp" alt="Module with USB" class="card-image" />
+        <img src="/img/stamp-usb-connect.webp" alt="Module with USB" class="card-image" />
         <p class="card-text">
           Plug-in the USB cable directly...
         </p>

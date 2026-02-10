@@ -33,9 +33,9 @@
 
 
     <p class="subtitle">
-      Click the <strong>Erase All</strong> button, then select the device.
-      You should only see one named <em>DUELink Official</em> or
-      <em>DUELink MicroBlocks</em>.
+      Click the <strong>Erase All</strong> button. The pop-up window should have a device named <em>DUELink Official</em> or <em>DUELink MicroBlocks</em>.<br/>
+      <br/>
+      Select the device then click <strong>Connect</strong>.
     </p>
 
     <img
@@ -50,23 +50,23 @@
       </button>
     </div>
 
-    <p class="subtitle">
-      If <strong>Erase All</strong> failed, visit the
-      <a href="https://www.duelink.com/docs/loader" target="_blank">
-        loader documentation page
-      </a>.
+     <p class="subtitle">
+      If the pop-up window didn't show the needed device or if <strong>Erase All</strong> failed, visit the <a href="https://www.duelink.com/docs/loader" target="_blank"> loader documentation page</a>.
     </p>
 
     <hr class="divider" />
 
     <!-- STEP 2 -->
-    <h2 class="section-title">Step 2 (Load Firmware)</h2>
+    <h2 class="section-title">Step 2 (Load MicroBlocks Firmware)</h2>
 
 
     <p class="subtitle">
-      Click the button, then <strong>Connect</strong>. Select the
-      <em>DFU in FS Mode</em> device.
-      If using Windows, install the DFU driver first.
+      Click the button below then select the <em>DFU in FS Mode</em> device and click <strong>Connect</strong>.
+    </p>
+
+    <p class="subtitle">
+      If using Windows, <a href="https://www.duelink.com/bin/usb-drivers/win-usb-dfu.zip" target="_blank">download</a>
+      and install the DFU driver first.
     </p>
 
     <img
@@ -96,13 +96,11 @@
     </div>
 
     <p class="subtitle">
-      Congratulations! You can now block-code using
+      Your're now ready to start block-code using
       <a
         href="https://www.duelink.com/docs/language/microblocks"
         target="_blank"
-      >
-        MicroBlocks
-      </a>.
+      >MicroBlocks</a>.
     </p>
     <!-- Custom MessageBox-->
     <div v-if="msg_box_erase_all_dms_confirm_final" class="overlay">
