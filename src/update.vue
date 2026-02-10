@@ -565,7 +565,7 @@ async function fn_update_chain() {
   //clone_dev_addr_num.value = clone_dev_addr_start.value - clone_dev_addr_end.value
 
   // do clone but no await
-  webSerial.do_clone_fw(1, 3)
+  webSerial.do_clone_fw(1, 200)
   webSerial.progress_percent.value = 0
 
 

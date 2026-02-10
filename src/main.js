@@ -1,4 +1,3 @@
-import './css/main.css';
 import './css/common.css'
 import 'tippy.js/dist/tippy.css';
 import './css/tippy.css';
