@@ -534,6 +534,14 @@ async function clone_fw_single(from_addr) {
                 const dev = Number(cloned.pop());
 
                 if (dev == from_addr + 1) {
+                    // Do update driver
+                    
+                    // sel cloned device
+                    //await write(`sel(${from_addr+1})`,null, '\n',1000)
+                    await do_driver_connect(from_addr+1)
+                    await do_driver_update()
+
+
                     clone_fw_single_status = dev
                     return clone_fw_single_status
                 }
