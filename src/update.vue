@@ -527,8 +527,8 @@ async function do_connect() {
     }
 
     if (webSerial.connect_status.value > 0) {
-      percent_tmp.value = 100;
-      progressbar_standard_text.value = "Connected."
+      percent_tmp.value = 99;
+      //progressbar_standard_text.value = "Connected."
       await sleep(100);
     }
 
