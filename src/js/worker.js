@@ -37,34 +37,34 @@ addEventListener('message', (e) => {
         case 'disconnect':
             disconnect();
             break;
-        case 'execute':
-            execute(e.data.line);
-            break;
-        case 'list':
-            list(e.data.callbackId);
-            break;
-        case 'listAll':
-            listAll();
-            break;
-        case 'memoryRegions':
-            //log('memoryRegions 1b');
-            memInfo();
-            break;
-        case 'newAll':
-            newAll();
-            break;
-        case 'play':
-            play();
-            break;
-        case 'record':
-            record(e.data.lines);
-            break;
-        case 'region':
-            region(e.data.index);
-            break;
-        case 'stop':
-            stop();
-            break;
+        // case 'execute':
+        //     execute(e.data.line);
+        //     break;
+        // case 'list':
+        //     list(e.data.callbackId);
+        //     break;
+        // case 'listAll':
+        //     listAll();
+        //     break;
+        // case 'memoryRegions':
+        //     //log('memoryRegions 1b');
+        //     memInfo();
+        //     break;
+        // case 'newAll':
+        //     newAll();
+        //     break;
+        // case 'play':
+        //     play();
+        //     break;
+        // case 'record':
+        //     record(e.data.lines);
+        //     break;
+        // case 'region':
+        //     region(e.data.index);
+        //     break;
+        // case 'stop':
+        //     stop();
+        //     break;
 
         case 'eraseall_dms_execute_msg':
             eraseall_dms_execute();
@@ -389,18 +389,18 @@ async function do_driver_update() {
 
     let lines = driverText.replace(/\r/gm, '').replace(/\t/gm, ' ').split(/\n/);
 
-    postMessage({ event: 'update_driver_percent_msg', value: 0 });
+    postMessage({ event: 'progress_percent', value: 0 });
 
     // erase program
     await write('new all');
 
     // start program
-    postMessage({ event: 'update_driver_percent_msg', value: 10 });
+    postMessage({ event: 'progress_percent', value: 10 });
 
     await write('pgmbrst()', '&');
     await sleep(250);
     
-    postMessage({ event: 'update_driver_percent_msg', value: 20 });
+    postMessage({ event: 'progress_percent', value: 20 });
 
     
     let lineNumber = 0;
@@ -425,14 +425,14 @@ async function do_driver_update() {
 
         per = per + 20;
 
-        postMessage({ event: 'update_driver_percent_msg', value: per });
+        postMessage({ event: 'progress_percent', value: per });
 
         //postMessage({ event: 'recording', percent: (++lineNumber/lines.length) * 100 });
     }
 
     //postMessage({ event: 'recording', percent: 100 });
 
-    postMessage({ event: 'update_driver_percent_msg', value: 95 });
+    postMessage({ event: 'progress_percent', value: 95 });
 
     await stream('\0');
     await readUntil();
@@ -486,13 +486,13 @@ async function do_driver_update() {
     }
     else {
         await writer.write(encoder.encode("$\n"));   await sleep(250);   
-        postMessage({ event: 'update_driver_percent_msg', value: 96 });
+        postMessage({ event: 'progress_percent', value: 96 });
         await writer.write(encoder.encode("# This is region 1 User\n"));   await sleep(250);   
         await writer.write(encoder.encode("# Replace this with your code\n"));   await sleep(250);
-        postMessage({ event: 'update_driver_percent_msg', value: 97 });
+        postMessage({ event: 'progress_percent', value: 97 });
         await writer.write(encoder.encode("# StatLed(200,200,10)\n")); await sleep(250);   
 
-        postMessage({ event: 'update_driver_percent_msg', value: 99 });
+        postMessage({ event: 'progress_percent', value: 99 });
         await writer.write(encoder.encode(">\n"));   await sleep(250);   
 
         await flush();
@@ -502,7 +502,7 @@ async function do_driver_update() {
 
 
 
-    postMessage({ event: 'update_driver_percent_msg', value: 100 });
+    postMessage({ event: 'progress_percent', value: 100 });
     
     //postMessage({ event: 'isTalking', value: false });
 
@@ -563,7 +563,7 @@ async function do_clone_fw(add_start, add_end) {
         await sleep(100)
         let i = 0
         while (clone_fw_single_status == 0) {
-            postMessage({ event: 'clone_fw_progress', value: i });
+            postMessage({ event: 'progress_percent', value: i });
             i = i + 1
             await sleep(300)         
             if (i >99) {
@@ -577,7 +577,7 @@ async function do_clone_fw(add_start, add_end) {
             break
         }
         else {
-            postMessage({ event: 'clone_fw_progress', value: 100 });
+            postMessage({ event: 'progress_percent', value: 100 });
         }
     }
 
@@ -1069,60 +1069,60 @@ async function synchronize() {
     }
     */
    // stop loop if any, unknow device address
-    postMessage({ event: 'update_driver_percent_msg', value: 5 });
+    postMessage({ event: 'progress_percent', value: 5 });
     await writer.write(encoder.encode('\x1B'));
     await sleep(400);
     await flush();
 
-    postMessage({ event: 'update_driver_percent_msg', value: 10 });
+    postMessage({ event: 'progress_percent', value: 10 });
     await writer.write(encoder.encode('\n'));
     await sleep(400);
     await flush();    
 
-    postMessage({ event: 'update_driver_percent_msg', value: 15 });
+    postMessage({ event: 'progress_percent', value: 15 });
     await writer.write(encoder.encode('sel(1)\n'));
     // max devices 255, each take 1ms, give 2ms to initialize
     await sleep(100); 
     await flush();      
     
-    postMessage({ event: 'update_driver_percent_msg', value: 20 });
+    postMessage({ event: 'progress_percent', value: 20 });
     
     // stop loop if any
     await writer.write(encoder.encode('\x1B'));
     await sleep(100);
     await flush();      
     
-    postMessage({ event: 'update_driver_percent_msg', value: 25 });
+    postMessage({ event: 'progress_percent', value: 25 });
     // send new line
     await writer.write(encoder.encode('\n'));
     await sleep(100);
     await flush();     
     
-    postMessage({ event: 'update_driver_percent_msg', value: 30 });
+    postMessage({ event: 'progress_percent', value: 30 });
 
     if (update_devaddr != 1) {
         // now talk to special device address    
         //dev_responsed = true;
        // await write(`sel(${update_devaddr})`);
-       postMessage({ event: 'update_driver_percent_msg', value: 35 });
+       postMessage({ event: 'progress_percent', value: 35 });
         await writer.write(encoder.encode(`sel(${update_devaddr})\n`));
         await sleep(50);
         await flush();   
         
 
         // stop loop if any
-        postMessage({ event: 'update_driver_percent_msg', value: 40 });
+        postMessage({ event: 'progress_percent', value: 40 });
         await writer.write(encoder.encode('\x1B'));
         await sleep(50);
         await flush();        
         // send new line
-        postMessage({ event: 'update_driver_percent_msg', value: 45 });
+        postMessage({ event: 'progress_percent', value: 45 });
         await writer.write(encoder.encode('\n'));
         await sleep(50);
         await flush();        
     }
 
-    postMessage({ event: 'update_driver_percent_msg', value: 60 });
+    postMessage({ event: 'progress_percent', value: 60 });
     if (isEchoing) {
         await turnOffEcho();
     }
@@ -1141,16 +1141,16 @@ async function synchronize() {
         tryCount--;
     }
     */
-    postMessage({ event: 'update_driver_percent_msg', value: 65 });
+    postMessage({ event: 'progress_percent', value: 65 });
     const ver = await getVersion();
     if (typeof ver === 'string') {
         log('version found', ver);
         postMessage({ event: 'version', value: ver });
-        postMessage({ event: 'update_driver_percent_msg', value: 100 });
+        postMessage({ event: 'progress_percent', value: 100 });
         return 1;
     }
 
-    postMessage({ event: 'update_driver_percent_msg', value: 71 });
+    postMessage({ event: 'progress_percent', value: 71 });
     
     await disconnect();
     return 0;

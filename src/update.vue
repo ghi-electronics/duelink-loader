@@ -565,13 +565,13 @@ async function fn_update_chain() {
   webSerial.do_clone_fw(1, 3)
 
 
-  webSerial.clone_fw_progress.value = 0
+  webSerial.progress_percent.value = 0
 
 
   // wait for await
   while (webSerial.clone_fw_status.value == 0) {
     await sleep(1000);
-    percent_tmp.value = webSerial.clone_fw_progress.value
+    percent_tmp.value = webSerial.progress_percent.value
   }
 
   await sleep(100);

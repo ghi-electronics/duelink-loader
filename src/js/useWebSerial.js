@@ -32,9 +32,9 @@ export default function useWebSerial($refs, emitter) {
     const update_devaddr=ref(1);
     const connect_status=ref(0);
 
-    const connection_mode=ref(0);; // 0: duelink regular, 1: update driver, 1: erase all
+    const connection_mode=ref(0); // 0: duelink regular, 1: update driver, 1: erase all
     const clone_fw_status=ref(0)
-    const clone_fw_progress=ref(0)
+
     const clone_fw_dev=ref(0)
     
     
@@ -253,9 +253,9 @@ export default function useWebSerial($refs, emitter) {
                 isBusy.value = false;
                 isConnected.value = true;
                 logEvent('Port connected.');
-                if (connection_mode.value == 0) {
-                    memoryRegionsSelect(true);
-                }
+                // if (connection_mode.value == 0) {
+                //     memoryRegionsSelect(true);
+                // }
 
                 connect_status.value = 1;
                 break;
@@ -266,10 +266,10 @@ export default function useWebSerial($refs, emitter) {
                 connect_status.value = -1;
                 isBusy.value = false;
                 break;
-            case 'erased':
-                regions.value = [];
-                emitter.emit('erased');
-                break;
+            // case 'erased':
+            //     regions.value = [];
+            //     emitter.emit('erased');
+            //     break;
             case 'isTalking':
                 isTalking.value = data.value;
                 // window.console.log('***********  TQD isTalking.......' + isTalking.value );
@@ -278,86 +278,86 @@ export default function useWebSerial($refs, emitter) {
                     // // memoryRegionsSelect(false);
                 // }
                 break;
-            case 'listAllResult':
-                emitter.emit('listAllResult', data);
-                break;
-            case 'logError':
-                logError(data.message);
-                if (data.message.toLowerCase().indexOf('port') > -1) {
-                    isBusy.value = false;
-                }
-                break;
-            case 'logEvent':
-                logEvent(data.message);
-                break;
-            case 'memoryRegionsResult':
-                regions.value = [];
-                // Ignore the headings.
-                data.result.shift();
-                // Make more usable.
-                data.result.forEach((info) => {
-                    if (info) {
-                        info = info.match(/(\*?\d+)/gm);
-                        const current = info[0].startsWith('*');
-                        if (current) {
-                            info[0] = info[0].substring(1, info[0].length);
-                        }
-                        regions.value.push({
-                            current,
-                            index: Number(info[0]),
-                            used: Number(info[1]),
-                            total: Number(info[2]),
-                        });
-                    }
-                });
-                if (memoryRegionsCallback) {
-                    memoryRegionsCallback();
-                    memoryRegionsCallback = null;
-                }
-                break;
-            case 'output':
-                log.value = data.value;
-                break;
-            case 'playing':
-                isStopped.value = false;
-                isPlaying.value = true;
-                logEvent('Program started.');
-                break;
-            case 'recording':
-                isPlaying.value = false;
-                isStopped.value = true;
-                if (data.percent === 0) {
-                    $refs.progress.style.width = '0';
-                    $refs.progress.classList.remove('opacity-0');
-                } else {
-                    $refs.progress.style.width = Math.trunc(data.percent) + '%';
-                }
-                break;
-            case 'recorded':
-                $refs.progress.style.width = '100%';
-                $refs.progress.classList.add('opacity-0');
+            // case 'listAllResult':
+            //     emitter.emit('listAllResult', data);
+            //     break;
+            // case 'logError':
+            //     logError(data.message);
+            //     if (data.message.toLowerCase().indexOf('port') > -1) {
+            //         isBusy.value = false;
+            //     }
+            //     break;
+            // case 'logEvent':
+            //     logEvent(data.message);
+            //     break;
+            // case 'memoryRegionsResult':
+            //     regions.value = [];
+            //     // Ignore the headings.
+            //     data.result.shift();
+            //     // Make more usable.
+            //     data.result.forEach((info) => {
+            //         if (info) {
+            //             info = info.match(/(\*?\d+)/gm);
+            //             const current = info[0].startsWith('*');
+            //             if (current) {
+            //                 info[0] = info[0].substring(1, info[0].length);
+            //             }
+            //             regions.value.push({
+            //                 current,
+            //                 index: Number(info[0]),
+            //                 used: Number(info[1]),
+            //                 total: Number(info[2]),
+            //             });
+            //         }
+            //     });
+            //     if (memoryRegionsCallback) {
+            //         memoryRegionsCallback();
+            //         memoryRegionsCallback = null;
+            //     }
+            //     break;
+            // case 'output':
+            //     log.value = data.value;
+            //     break;
+            // case 'playing':
+            //     isStopped.value = false;
+            //     isPlaying.value = true;
+            //     logEvent('Program started.');
+            //     break;
+            // case 'recording':
+            //     isPlaying.value = false;
+            //     isStopped.value = true;
+            //     if (data.percent === 0) {
+            //         $refs.progress.style.width = '0';
+            //         $refs.progress.classList.remove('opacity-0');
+            //     } else {
+            //         $refs.progress.style.width = Math.trunc(data.percent) + '%';
+            //     }
+            //     break;
+            // case 'recorded':
+            //     $refs.progress.style.width = '100%';
+            //     $refs.progress.classList.add('opacity-0');
                 
-                memoryRegionsSelect(false);
-                break;
-            case 'regionSelected':
-                // Toggle `current` for each region.
-                regions.value.forEach((region) => region.current = region.index === data.index);
-                memoryRegionsSelect(true);
-                break;
-            case 'stopped':
-                isPlaying.value = false;
-                isStopped.value = true;
-                logEvent('Program stopped.');
-                break;
+            //     memoryRegionsSelect(false);
+            //     break;
+            // case 'regionSelected':
+            //     // Toggle `current` for each region.
+            //     regions.value.forEach((region) => region.current = region.index === data.index);
+            //     memoryRegionsSelect(true);
+            //     break;
+            // case 'stopped':
+            //     isPlaying.value = false;
+            //     isStopped.value = true;
+            //     logEvent('Program stopped.');
+            //     break;
             case 'version':
                 version.value = data.value;
                 break;
-            case 'writeResult':
-                if (callbacks[data.callbackId]) {
-                    callbacks[data.callbackId](data.result);
-                    delete callbacks[data.callbackId];
-                }
-                break;
+            // case 'writeResult':
+            //     if (callbacks[data.callbackId]) {
+            //         callbacks[data.callbackId](data.result);
+            //         delete callbacks[data.callbackId];
+            //     }
+            //     break;
             case 'ConnectFailed':
                 const index = data.message.indexOf(':');
                 let msg = data.message               
@@ -391,19 +391,10 @@ export default function useWebSerial($refs, emitter) {
                 device_name.value = data.value;
                 break;
 
-            case 'update_driver_percent_msg':
-                progress_percent.value = data.value;
-                break;
-
             case 'update_driver_path_msg':
                 update_driver_path.value = data.value;
                 break; 
-                
-            case 'clone_fw_progress':
-                clone_fw_progress.value = data.value
-                //progress_percent.value = data.value;
-                break;  
-                
+
             case 'clone_fw_dev':
                 clone_fw_dev.value = data.value
                 break;
@@ -411,6 +402,10 @@ export default function useWebSerial($refs, emitter) {
             case 'clone_fw_status':
                 clone_fw_status.value = data.value
                 break
+
+            case 'progress_percent':
+                progress_percent.value = data.value;
+                break;    
         }
     }
 
@@ -446,7 +441,6 @@ export default function useWebSerial($refs, emitter) {
         connect_status,
         connection_mode,
         clone_fw_status,
-        clone_fw_progress,
         clone_fw_dev,
         // Methods
         connect,
