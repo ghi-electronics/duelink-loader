@@ -401,6 +401,7 @@ export default function useWebSerial($refs, emitter) {
                 
             case 'clone_fw_progress':
                 clone_fw_progress.value = data.value
+                //progress_percent.value = data.value;
                 break;  
                 
             case 'clone_fw_dev':

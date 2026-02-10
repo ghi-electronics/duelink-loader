@@ -516,6 +516,7 @@ async function do_driver_update() {
 
 let clone_fw_single_status = 0
 async function clone_fw_single(from_addr) {
+    console.log(`Cloning from ${from_addr} to ${from_addr+1}...`)
     await write(`sel(${from_addr+1})`,null, '\n',1000)
     
     // try to read statled pin, if return 1 mean exist
@@ -551,12 +552,13 @@ async function do_clone_fw(add_start, add_end) {
     console.log(add_start);
     console.log(add_end);
     let d = add_start
-    clone_fw_single_status = 0
+    
 
     for (d = add_start; d < add_end; d++)  {
+        clone_fw_single_status = 0
         postMessage({ event: 'clone_fw_dev', value: (d+1) });
 
-        clone_fw_single(add_start)
+        clone_fw_single(d)
         
         await sleep(100)
         let i = 0

@@ -117,7 +117,7 @@
     <img src="/img/console-connect-dfu.webp" alt="Driver selection" class="screenshot" />
 
     <div class="button-row">
-      <button class="outline-button">
+      <button class="outline-button" @click="fn_update_chain">
         Update Chain
       </button>
     </div>
@@ -501,6 +501,89 @@ async function do_update_driver_final_no() {
 
 }
 
+async function do_connect() {
+    webSerial.connect_status.value = 0;
+    webSerial.connection_mode.value = 0; // regular mode
+    webSerial.update_driver_status.value = 0; // reset update list
+    percent_tmp.value = 0;
+    webSerial.progress_percent.value = 0;
+    const ret = await webSerial.connect();
+
+    if (ret) {
+        progressbar_standard_text.value = "Please wait..."
+        progressbar_standard.value = true;
+        
+        percent_tmp.value = 0;
+        while (webSerial.connect_status.value == 0) {
+            await sleep(100); 
+
+            percent_tmp.value = webSerial.progress_percent.value;
+
+            // when percent_tmp.value is 65, get version() then 100
+            // if 71 then failed
+            if (percent_tmp.value == 71) { // make sure it is stop
+                break;
+            }
+        }
+
+        if (webSerial.connect_status.value > 0) {
+            percent_tmp.value = 100;
+            progressbar_standard_text.value = "Connected."
+            await sleep(100); 
+        }
+        
+        
+        progressbar_standard.value = false;
+        percent_tmp.value = 0;
+        await sleep(100); // make sure connect_msgbox_progress is off
+    }
+
+}
+
+async function fn_update_chain() {
+
+  if (webSerial.isConnected.value == false) {
+
+    await do_connect();
+  }
+
+  if (webSerial.isConnected.value == false)
+    return
+
+  webSerial.clone_fw_status.value = 0
+
+
+  progressbar_standard_text.value = "Please wait..."
+  progressbar_standard.value = true;
+  webSerial.progress_percent.value = 0;
+  percent_tmp.value = 0;
+
+  //console.log("Clone firmware - yes")
+  //clone_dev_addr_num.value = clone_dev_addr_start.value - clone_dev_addr_end.value
+
+  // do clone but no await
+  webSerial.do_clone_fw(1, 3)
+
+
+  webSerial.clone_fw_progress.value = 0
+
+
+  // wait for await
+  while (webSerial.clone_fw_status.value == 0) {
+    await sleep(1000);
+    percent_tmp.value = webSerial.clone_fw_progress.value
+  }
+
+  await sleep(100);
+  progressbar_standard.value = false;
+
+  if (webSerial.clone_fw_status.value == 3)
+    console.log("success")
+  else
+    console.log("failed")
+  //clone_msg_box_result.value = true
+}
+
 
 // DFU stuff
 // ----- Configuration -----
@@ -560,8 +643,8 @@ async function loadDfu() {
 }
 
 async function loadFirmwareForKey() {
-  
-  const selected = versions?.value[selectedVersionIndex.value] 
+
+  const selected = versions?.value[selectedVersionIndex.value]
   const url = selected?.url;
 
   // 👇 This is what you asked for
@@ -898,5 +981,4 @@ async function connect() {
   font-size: 1.1em;
   padding: 4px 6px;
 }
-
 </style>
