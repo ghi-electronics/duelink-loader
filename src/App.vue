@@ -1,7 +1,7 @@
 <template>
   <div class="page">
     <!-- Header -->
-    <h1 class="title">DUELink Loader</h1>
+    <h1>DUELink Loader</h1>
 
     <img
       src="/img/duelinklogo.webp"
@@ -9,7 +9,7 @@
       class="logo"
     />
 
-    <p class="subtitle">
+    <p >
       These pages will help you with updating your DUELink modules.
       Select the option that best suits your needs.
     </p>
@@ -57,11 +57,6 @@
 </template>
 
 <script setup>
-
-
-
-
-
 
 </script>
 

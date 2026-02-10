@@ -1,39 +1,40 @@
 <template>
   <div class="page">
-    <h1 class="title">MicroBlocks Firmware Loader</h1>
+    <h1>MicroBlocks Firmware Loader</h1>
     
-    <p class="subtitle">
-      This page will load MicroBlocks firmware on a single device
-      or the first device in a chain.
-    </p>
-
-    <p class="subtitle">
-      If you need to update the DUELink firmware on chained modules,
-      do that first on the <a href="/update">DUELink update page</a>.
+    <p>
+      This page will load MicroBlocks firmware on a single device,
+      or on the first device in a chain.
     </p>
 
     <img
       src="/img/cincobit-daisylinked.webp"
-      alt="Chained modules"
+      alt="cincobit daisylinked"
       class="screenshot"
     />
-  <hr class="divider" />
-    <!-- STEP 1 -->
-    <h2 class="section-title">Step 1 (Erase All)</h2>
 
-    <p class="subtitle">
+    <p>
+      If you need to update the DUELink firmware on chained modules,
+      do that first on the <a href="/update">DUELink update page</a>.
+    </p>
+    
+  <hr/>
+    <!-- STEP 1 -->
+    <h2 >Step 1: Erase All</h2>
+
+    <p>
       Connect your module using a USB cable.
     </p>
 
     <img
-          src="/img/mcduestem-b-1.webp"
+          src="/img/stamp-usb-connect.webp"
           alt="Module with USB"
           class="card-image"
         />
 
 
-    <p class="subtitle">
-      Click the <strong>Erase All</strong> button. The pop-up window should have a device named <em>DUELink Official</em> or <em>DUELink MicroBlocks</em>.<br/>
+    <p>
+      Click the <strong>Erase All</strong> button below. The pop-up window should have a device named <em>DUELink Official</em> or <em>DUELink MicroBlocks</em>.<br/>
       <br/>
       Select the device then click <strong>Connect</strong>.
     </p>
@@ -44,29 +45,28 @@
       class="screenshot"
     />
 
-    <div class="button-row">
+    <div >
       <button class="outline-button" @click="fn_erase_all_show_web_usb_connect()">
         Erase All
       </button>
     </div>
 
-     <p class="subtitle">
+     <p>
       If the pop-up window didn't show the needed device or if <strong>Erase All</strong> failed, visit the <a href="https://www.duelink.com/docs/loader" target="_blank"> loader documentation page</a>.
     </p>
 
-    <hr class="divider" />
+    <hr  />
 
     <!-- STEP 2 -->
-    <h2 class="section-title">Step 2 (Load MicroBlocks Firmware)</h2>
+    <h2 >Step 2: Load MicroBlocks Firmware</h2>
 
 
-    <p class="subtitle">
+    <p>
       Click the button below then select the <em>DFU in FS Mode</em> device and click <strong>Connect</strong>.
     </p>
 
-    <p class="subtitle">
-      If using Windows, <a href="https://www.duelink.com/bin/usb-drivers/win-usb-dfu.zip" target="_blank">download</a>
-      and install the DFU driver first.
+    <p>
+      If using Windows, <a href="https://www.duelink.com/bin/usb-drivers/win-usb-dfu.zip" target="_blank">download</a> and install the DFU driver first.
     </p>
 
     <img
@@ -77,7 +77,7 @@
 
     <div v-if="dfu" class="version-select">
       <label for="version-select">
-        Select firmware version:
+        Select MicroBlocks firmware version:
       </label>
 
       <select id="version-select" v-model="selectedVersionIndex">
@@ -86,21 +86,21 @@
         </option>
       </select>
 
-      <!-- <div style="margin-top: 10px;"> <strong>Selected URL:</strong> <div>{{ selectedVersion?.url }}</div> </div>  -->
     </div>
 
-    <div class="button-row">
+    <div >
       <button class="outline-button" @click="fn_load_firmware">
         Load MicroBlocks Firmware
       </button>
     </div>
 
-    <p class="subtitle">
-      Your're now ready to start block-code using
-      <a
+    <p>
+      You are now ready to start block-code using <a
         href="https://www.duelink.com/docs/language/microblocks"
-        target="_blank"
-      >MicroBlocks</a>.
+        target="_blank">MicroBlocks</a>.
+    </p>
+    <p>
+      For any issues, consult the <a href="https://www.duelink.com/docs/loader" target="_blank"> loader documentation</a> page.
     </p>
     <!-- Custom MessageBox-->
     <div v-if="msg_box_erase_all_dms_confirm_final" class="overlay">

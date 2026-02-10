@@ -2,15 +2,15 @@
   <div class="page">
     <h1 class="title">DUELink Loader</h1>
 
-    <p class="subtitle">
+    <p>
       Update modules with official firmware and drivers!
     </p>
 
 
-    <hr class="divider" />
+    <hr  />
 
     <!-- STEP 1 -->
-    <h2 class="section-title">Step 1 (Erase All)</h2>
+    <h2 >Step 1: Erase All</h2>
 
     <div class="card-container">
       <div class="card">
@@ -28,7 +28,7 @@
       </div>
     </div>
 
-    <p class="subtitle">
+    <p>
       Click the <strong>Erase All</strong> button. The pop-up window should have a device named <em>DUELink Official</em> or <em>DUELink MicroBlocks</em>.<br/>
       <br/>
       Select the device then click <strong>Connect</strong>.
@@ -36,30 +36,30 @@
 
     <img src="/img/console-connect-com.webp" alt="Select COM device" class="screenshot" />
 
-    <div class="button-row">
+    <div >
       <button class="outline-button" @click="fn_erase_all_show_web_usb_connect()">
         Erase All
       </button>
     </div>
 
-    <p class="subtitle">
-      If the pop-up window didn't show the needed device or if <strong>Erase All</strong> failed, visit the <a href="https://www.duelink.com/docs/loader" target="_blank"> loader documentation page</a>.
+    <p>
+      If the pop-up window didn't show the needed device or if <strong>Erase All</strong> failed, your device might already be erased. Try Step 2 or visit the <a href="https://www.duelink.com/docs/loader" target="_blank">loader documentation page</a>.
     </p>
 
-    <hr class="divider" />
+    <hr  />
 
     <!-- STEP 2 -->
-    <h2 class="section-title">Step 2 (Load Firmware/Driver)</h2>
+    <h2 >Step 2: Load Firmware/Driver</h2>
 
-    <p class="subtitle">
+    <p>
       This step will update the firmware on a single device, or on the first device in a chain.
     </p>
 
-    <p class="subtitle">
+    <p>
       Click the button below then select the <em>DFU in FS Mode</em> device and click <strong>Connect</strong>.
     </p>
 
-    <p class="subtitle">
+    <p>
       If using Windows, <a href="https://www.duelink.com/bin/usb-drivers/win-usb-dfu.zip" target="_blank">download</a>
       and install the DFU driver first.
     </p>
@@ -69,7 +69,7 @@
 
     <div v-if="dfu" class="version-select">
       <label for="version-select">
-        Select firmware version:
+        Select DUELink firmware version:
       </label>
 
       <select id="version-select" v-model="selectedVersionIndex">
@@ -78,33 +78,30 @@
         </option>
       </select>
 
-      <!-- <div style="margin-top: 10px;"> <strong>Selected URL:</strong> <div>{{ selectedVersion?.url }}</div> </div>  -->
     </div>
 
-    <div class="button-row">
+    <div >
       <button class="outline-button" @click="fn_load_firmware">
         Load DUELink Firmware/Driver
       </button>
 
-      <hr class="divider" />
-
-      <p class="subtitle">
+      <p>
         The update steps are now complete on a single device.<br />
         <br />
         Continue to step 3 if you have multiple devices in a chain that you want to update.
       </p>
     </div>
 
-    <hr class="divider" />
+    <hr  />
 
     <!-- STEP 3 -->
-    <h2 class="section-title">Step 3 (Update Chain)</h2>
+    <h2 >Step 3: Update Chain</h2>
 
-    <p class="subtitle">
+    <p>
       This optional step is for updating all modules in a chain (Daisylink).
     </p>
 
-    <p class="subtitle">
+    <p>
       Click the <strong>Load Driver Script</strong> button,
       then select the device. You should only see one named
       <em>DUELink Official</em>.
@@ -112,14 +109,17 @@
 
     <img src="/img/console-connect-com.webp" alt="COM selection" class="screenshot" />
 
-    <div class="button-row">
+    <div >
       <button class="outline-button" @click="fn_update_chain">
         Update Chain
       </button>
     </div>
 
 
-
+    <p>
+      For any issues, consult the <a href="https://www.duelink.com/docs/loader" target="_blank"> loader documentation</a> page.
+    </p>
+    
     <!-- Custom MessageBox-->
     <div v-if="msg_box_erase_all_dms_confirm_final" class="overlay">
       <div class="dialog">
