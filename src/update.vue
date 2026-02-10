@@ -506,7 +506,7 @@ async function do_connect() {
   const ret = await webSerial.connect(); // this just send a message, await or no, not really care
 
   if (ret) {
-    progressbar_standard_text.value = "Please wait while connecting..."
+    progressbar_standard_text.value = "Connecting to device 1..."
     progressbar_standard.value = true;
 
     percent_tmp.value = 0;

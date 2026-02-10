@@ -511,7 +511,8 @@ async function do_driver_update() {
 
 let clone_fw_single_status = 0
 async function clone_fw_single(from_addr) {
-    console.log(`Cloning from ${from_addr} to ${from_addr + 1}...`)
+    //console.log(`Cloning from ${from_addr} to ${from_addr + 1}...`)    
+    postMessage({ event: 'progress_body_text', value: `Checking if device ${from_addr + 1} exists…` });
     await write(`sel(${from_addr + 1})`, null, '\n', 1000)
 
     // try to read statled pin, if return 1 mean exist
@@ -521,8 +522,9 @@ async function clone_fw_single(from_addr) {
 
     if (result.length > 0) {
         const ret = Number(result.pop());
-        if (ret > 0) {
+        if (ret > 0.1) {            
             await write(`sel(${from_addr})`, null, '\n', 1000)
+            postMessage({ event: 'progress_body_text', value: `Cloning firmware from device ${from_addr} to device ${from_addr + 1}...` });
             const cloned = await write(`clone()`, null, '\n', 30000)
 
             if (cloned.length > 0) {
@@ -552,8 +554,8 @@ async function do_clone_fw(add_start, add_end) {
     for (d = add_start; d < add_end; d++) {
         clone_fw_single_status = 0
         postMessage({ event: 'clone_fw_dev', value: (d + 1) });
-        postMessage({ event: 'progress_body_text', value: `Cloning firmware from device ${d} to device ${d + 1}...` });
-
+        //postMessage({ event: 'progress_body_text', value: `Cloning firmware from device ${d} to device ${d + 1}...` });
+        //postMessage({ event: 'progress_body_text', value: `Checking if device ${d + 1} exists…` });
         clone_fw_single(d)
 
         await sleep(100)
