@@ -583,12 +583,30 @@ async function fn_update_chain() {
   await sleep(100);
   progressbar_standard.value = false;
 
+  // Disconnect the device to clear the bus
+  webSerial.disconnect();
 
-  if (webSerial.clone_fw_status.value == 3)
-    console.log("success")
+  if (webSerial.clone_fw_status.value > 1) {
+    // we don't know how many device, as long as > 1 then it is success
+    if (webSerial.clone_fw_status.value == 2)
+      msg_box_success_body_text.value = `A total of ${webSerial.clone_fw_status.value - 1} device was successfully cloned and its driver updated.`
   else
+      msg_box_success_body_text.value = `A total of ${webSerial.clone_fw_status.value - 1} devices were successfully cloned and had their drivers updated.`
+
+    msg_box_success.value = true
+    console.log("success")
+  }
+  else {
+    msg_box_failed_body_text.value = "No devices were cloned successfully."
+    msg_box_failed.value = true
     console.log("failed")
+  }
+  //if (webSerial.clone_fw_status.value == 3)
+  //  console.log("success")
+  //else
+  //  console.log("failed")
   //clone_msg_box_result.value = true
+
 }
 
 
