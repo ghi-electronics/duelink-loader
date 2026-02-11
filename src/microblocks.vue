@@ -26,7 +26,7 @@
     </p>
 
     <img
-          src="/img/stamp-usb-connect.webp"
+          src="/img/cincobit-usb-connect.webp"
           alt="Module with USB"
         />
 
