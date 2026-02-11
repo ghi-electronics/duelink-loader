@@ -98,11 +98,11 @@
     <h2 >Step 3: Update Chain</h2>
 
     <p>
-      This optional step is for updating all modules in a chain (Daisylink).
+      This optional step uses the first moudle to update all other modules in a chain (Daisylink).
     </p>
 
     <p>
-      Click the <strong>Load Driver Script</strong> button,
+      Click the <strong>Update Chain</strong> button,
       then select the device. You should only see one named
       <em>DUELink Official</em>.
     </p>
