@@ -51,8 +51,8 @@
       </button>
     </div>
 
-     <p>
-      If the pop-up window didn't show the needed device or if <strong>Erase All</strong> failed, visit the <a href="https://www.duelink.com/docs/loader" target="_blank"> loader documentation page</a>.
+    <p>
+      If the pop-up window didn't show the needed device or if <strong>Erase All</strong> failed, your device might already be erased. Try Step 2 or visit the <a href="https://www.duelink.com/docs/loader" target="_blank">loader documentation page</a>.
     </p>
 
     <hr  />
