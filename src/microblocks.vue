@@ -10,7 +10,6 @@
     <img
       src="/img/cincobit-daisylinked.webp"
       alt="cincobit daisylinked"
-      class="screenshot"
     />
 
     <p>
@@ -29,7 +28,6 @@
     <img
           src="/img/stamp-usb-connect.webp"
           alt="Module with USB"
-          class="card-image"
         />
 
 
@@ -42,7 +40,6 @@
     <img
       src="/img/console-connect-com.webp"
       alt="Select COM device"
-      class="screenshot"
     />
 
     <div >
@@ -72,7 +69,6 @@
     <img
       src="/img/console-connect-dfu.webp"
       alt="DFU selection"
-      class="screenshot"
     />
 
     <div v-if="dfu" class="version-select">

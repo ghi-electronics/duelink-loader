@@ -6,7 +6,6 @@
     <img
       src="/img/duelinklogo.webp"
       alt="DUELink Logo"
-      class="logo"
     />
 
     <p >
@@ -22,7 +21,7 @@
           alt="Languages"
           class="card-image"
         />
-        <p class="card-text">
+        <p>
           This is what Python, JavaScript and other tethered languages use.
           You will also use this with Standalone Scripts.
         </p>
@@ -40,7 +39,7 @@
           alt="MicroBlocks"
           class="card-image"
         />
-        <p class="card-text">
+        <p>
           MicroBlocks users will use this to update a single module
           or a chain of DUELink modules.
         </p>

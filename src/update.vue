@@ -15,14 +15,14 @@
     <div class="card-container">
       <div class="card">
         <img src="/img/stamp-usb-connect.webp" alt="Module with USB" class="card-image" />
-        <p class="card-text">
+        <p>
           Plug-in the USB cable directly...
         </p>
       </div>
 
       <div class="card">
         <img src="/img/usbhook-rgb3.webp" alt="USB Hook" class="card-image" />
-        <p class="card-text">
+        <p>
           ...or use an adapter on the Uplink connector.
         </p>
       </div>
@@ -34,7 +34,7 @@
       Select the device then click <strong>Connect</strong>.
     </p>
 
-    <img src="/img/console-connect-com.webp" alt="Select COM device" class="screenshot" />
+    <img src="/img/console-connect-com.webp" alt="Select COM device" />
 
     <div >
       <button class="outline-button" @click="fn_erase_all_show_web_usb_connect()">
@@ -64,7 +64,7 @@
       and install the DFU driver first.
     </p>
 
-    <img src="/img/console-connect-dfu.webp" alt="DFU selection" class="screenshot" />
+    <img src="/img/console-connect-dfu.webp" alt="DFU selection"/>
 
 
     <div v-if="dfu" class="version-select">
@@ -107,7 +107,7 @@
       <em>DUELink Official</em>.
     </p>
 
-    <img src="/img/console-connect-com.webp" alt="COM selection" class="screenshot" />
+    <img src="/img/console-connect-com.webp" alt="COM selection"/>
 
     <div >
       <button class="outline-button" @click="fn_update_chain">
