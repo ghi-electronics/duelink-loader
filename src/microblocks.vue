@@ -181,6 +181,7 @@
 
         </div>
       </div>
+      <Footer />
   </div>
 </template>
 
@@ -188,6 +189,7 @@
 import { computed, nextTick, onMounted, reactive, ref, watch } from 'vue';
 import useWebSerial from './js/useWebSerial.js';
 import mitt from "mitt";
+import Footer from './components/Footer.vue';
 
 const $refs = { editor: null, filename: null, input: null, progress: null };
 
