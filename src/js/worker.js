@@ -197,15 +197,15 @@ async function eraseall_dms_connect(devAdd) {
     await new Promise(r => setTimeout(r, 400)); // 200ms pause
     [port] = await navigator.serial.getPorts();
     try {
-        if (port.connected) {
-            if (port.readable != null && port.writable != null) {
-                if (port.readable.locked || port.writable.locked) {
-                    await disconnect();
-                    await new Promise(r => setTimeout(r, 1000));
+        if (port != null) {
+            if (port.connected) {
+                if (port.readable != null && port.writable != null) {
+                    if (port.readable.locked || port.writable.locked) {
+                        await disconnect();
+                        await new Promise(r => setTimeout(r, 1000));
+                    }
                 }
             }
-
-
             await port.open({
                 baudRate: 115200,
                 dataBits: 8,
@@ -520,7 +520,7 @@ async function clone_fw_single(from_addr) {
     postMessage({ event: 'progress_body_text', value: finished_str + `\nChecking if device ${from_addr + 1} exists…` });
     try {
 
-    
+
         await write(`sel(${from_addr + 1})`, null, '\n', 1000)
 
         // try to read statled pin, if return 1 mean exist
@@ -530,7 +530,7 @@ async function clone_fw_single(from_addr) {
 
         if (result.length > 0) {
             const ret = Number(result.pop());
-            if (ret > 0.1) {            
+            if (ret > 0.1) {
                 await write(`sel(${from_addr})`, null, '\n', 1000)
                 postMessage({ event: 'progress_body_text', value: finished_str + `\nCloning firmware from device ${from_addr} to device ${from_addr + 1}...` });
                 const cloned = await write(`clone()`, null, '\n', 40000)
@@ -546,15 +546,15 @@ async function clone_fw_single(from_addr) {
             }
         }
 
-        
+
         //postMessage({ event: 'progress_body_text', value: finished_str + `\nOnly ${from_addr} devices were found. Finishing update...` });
-        await write(`sel(1)`)        
+        await write(`sel(1)`)
     }
     catch {
 
     }
 
-    
+
     // something wrong, select start 1
     finished_str = ""
     clone_fw_single_status = -1
@@ -603,7 +603,7 @@ async function do_clone_fw(add_start, add_end) {
             await do_driver_connect(d + 1)
             update_progressbar_percent = true
 
-            
+
 
             if (i < 95)
                 i = i + 5
@@ -613,7 +613,7 @@ async function do_clone_fw(add_start, add_end) {
             await do_driver_update()
             update_progressbar_percent = true
 
-            if (do_driver_update_state>0) {
+            if (do_driver_update_state > 0) {
                 if (i < 99)
                     i = 99
 
@@ -621,7 +621,7 @@ async function do_clone_fw(add_start, add_end) {
                 postMessage({ event: 'progress_body_text', value: finished_str + `\nFound: ${update_device_name} at address ${d + 1}\nFinishing loading the driver…` });
                 finished_str = finished_str + `Finished: ${update_device_name} at address (${d + 1})`
                 finished_str += '\n'
-                
+
                 if (d > 10) {
                     finished_str = finished_str.split('\n').slice(1).join('\n');
                 }
