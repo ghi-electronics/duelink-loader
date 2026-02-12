@@ -102,18 +102,18 @@ async function connect() {
     [port] = await navigator.serial.getPorts();
     try {
 
-        if (port.connected) {
-            if (port.readable != null && port.writable != null) {
-                if (port.readable.locked || port.writable.locked) {
-                    console.log('port. locked');
-                    await disconnect();
-                    await new Promise(r => setTimeout(r, 1000));
+        if (port != null) {
+            if (port.connected) {
+                if (port.readable != null && port.writable != null) {
+                    if (port.readable.locked || port.writable.locked) {
+                        console.log('port. locked');
+                        await disconnect();
+                        await new Promise(r => setTimeout(r, 1000));
 
 
+                    }
                 }
             }
-
-
             await port.open({
                 baudRate: 115200,
                 dataBits: 8,
@@ -121,7 +121,6 @@ async function connect() {
                 stopBits: 1,
                 flowControl: 'none',
             });
-
         }
         else {
             console.log('port. return');
