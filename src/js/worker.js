@@ -195,15 +195,20 @@ async function eraseall_dms_execute() {
 async function eraseall_dms_connect(devAdd) {
     log(`Port status ${isConnected}`);
     await new Promise(r => setTimeout(r, 400)); // 200ms pause
+
+    log(`Port status 1====${isConnected}`);
     [port] = await navigator.serial.getPorts();
+
+    log(`Port status 2====${isConnected}`);
     try {
-        if (port.connected) {
-            if (port.readable != null && port.writable != null) {
-                if (port.readable.locked || port.writable.locked) {
-                    await disconnect();
-                    await new Promise(r => setTimeout(r, 1000));
-                }
-            }
+        if (port.connected || true) {
+            log(`Port status 3====${isConnected}`);
+            // if (port.readable != null && port.writable != null) {
+            //     if (port.readable.locked || port.writable.locked) {
+            //         await disconnect();
+            //         await new Promise(r => setTimeout(r, 1000));
+            //     }
+            // }
 
 
             await port.open({
@@ -215,6 +220,7 @@ async function eraseall_dms_connect(devAdd) {
             });
         }
         else {
+            log(`Port status 4====${isConnected}`);
             return;
         }
     } catch (error) {
@@ -223,6 +229,7 @@ async function eraseall_dms_connect(devAdd) {
         return;
     }
 
+    log(`Port status 5====${isConnected}`);
     port.addEventListener('disconnect', () => {
         log('Port disconnected');
         disconnect();
