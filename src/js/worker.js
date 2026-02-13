@@ -300,7 +300,14 @@ let update_devaddr = 1;
 async function do_driver_connect(devAdd) {
     update_can_update = false;
     update_devaddr = devAdd;
-    await connect()
+    if (!isConnected) {
+        await connect()
+    }
+    else {
+        let ret = await synchronize()
+        if (!ret)
+            return
+    }
 
     await sleep(100);
 
