@@ -60,7 +60,7 @@
                     <i class="fab fa-linkedin"></i>
                 </a>
                 <a href="https://www.instagram.com/ghielectronics/" target="_blank">
-                    <i class="fab fa-instagram"></i>
+                    <i class="fab fa-instagram-square"></i>
                 </a>
             </div>
         </div>
