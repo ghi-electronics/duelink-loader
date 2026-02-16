@@ -231,7 +231,7 @@
     <!--progressbar connect-->
     <div v-if="progressbar_standard" class="overlay">
       <div class="dialog" style="width: 25vw;">
-        <div class="dialog-title" :class="{ 'dialog-title-success': percent_tmp === 100 }">
+        <div class="dialog-title" :class="{ 'dialog-title-success': progress_show_close_button === true }">
           <!--<i class="fas fa-exclamation-triangle" style="color: yellow; margin-right: 8px;"></i>-->
           <!-- Show icon only while writing -->
           <i v-if="percent_tmp < 100" class="fas fa-exclamation-triangle" style="margin-right: 8px;"></i>
@@ -243,16 +243,35 @@
                 {{progressbar_body_text}}
               </div>
               <br>
-              
-              <div class="update-driver-progress-container">
-                <div class="update-driver-progress-bar" :style="{
-                  width: percent_tmp + '%'
+              <!-- Show this only when progress_show_close_button = false-->
+              <!-- Show progress only when NOT finished -->
+              <div v-if="!progress_show_close_button">
+                <div class="update-driver-progress-container">
+                  <div
+                    class="update-driver-progress-bar"
+                    :style="{ width: percent_tmp + '%' }"
+                  ></div>
+                </div>
 
-                }"></div>
+                <div class="progress-text">
+                  {{ percent_tmp }}%
+                </div>
               </div>
-              <div class="progress-text">
-                {{ percent_tmp }}%
+
+              <!-- Show this only when progress_show_close_button = true-->
+              <!-- Show Close button only when finished -->
+              <div class="dialog-buttons">
+                <button
+                  v-if="progress_show_close_button"
+                  class="no"
+                  @click="progressbar_standard=false;
+                  progress_show_close_button = false;
+                  "
+                >
+                  Close
+                </button>
               </div>
+              
 
             </div>
 
@@ -305,6 +324,7 @@ const msg_box_update_driver_show_detail = ref(false);
 
 
 const percent_tmp = ref(0);
+const progress_show_close_button = ref(false);
 
 const ERASE_ALL_DMS_CONFIRM_FINAL_TEXT = "Firmware detected.";
 const ERASE_ALL_DMS_CONFIRM_FINAL_TEXT2 = "Are you sure you want to erase all?";
@@ -344,6 +364,7 @@ async function fn_erase_all_show_web_usb_connect() {
 
 async function fn_erase_all_dms_final_yes() {
   msg_box_erase_all_dms_confirm_final.value = false;
+  progress_show_close_button.value=false;
 
   percent_tmp.value = 0
   progressbar_title_text.value = "Erase All"
@@ -552,8 +573,9 @@ async function do_connect() {
 }
 
 async function fn_update_chain() {
-
+  progress_show_close_button.value = false;
   progressbar_title_text.value = "Update Chain"
+  progressbar_body_text.value = "Please wait..."
   if (webSerial.isConnected.value == false) {
 
     await do_connect();
@@ -565,7 +587,8 @@ async function fn_update_chain() {
   webSerial.clone_fw_status.value = 0
 
 
-  progressbar_body_text.value = "Please wait..."
+  
+  await sleep(50)
   progressbar_standard.value = true;
   webSerial.progress_percent.value = 0;
   percent_tmp.value = 0;
@@ -574,7 +597,7 @@ async function fn_update_chain() {
   //clone_dev_addr_num.value = clone_dev_addr_start.value - clone_dev_addr_end.value
 
   // do clone but no await
-  webSerial.do_clone_fw(1, 200)
+  webSerial.do_clone_fw(1, 200,)
   webSerial.progress_percent.value = 0
 
 
@@ -586,22 +609,30 @@ async function fn_update_chain() {
   }
 
   await sleep(100);
-  progressbar_standard.value = false;
+  //progressbar_standard.value = false;
 
   // Disconnect the device to clear the bus
   webSerial.disconnect();
 
   if (webSerial.clone_fw_status.value > 1) {
     // we don't know how many device, as long as > 1 then it is success
-    if (webSerial.clone_fw_status.value == 2)
-      msg_box_success_body_text.value = `A total of ${webSerial.clone_fw_status.value - 1} device was successfully cloned and its driver updated.`
-  else
-      msg_box_success_body_text.value = `A total of ${webSerial.clone_fw_status.value - 1} devices were successfully cloned and had their drivers updated.`
+  //   if (webSerial.clone_fw_status.value == 2)
+  //     msg_box_success_body_text.value = `A total of ${webSerial.clone_fw_status.value - 1} device was successfully cloned and its driver updated.`
+  // else
+  //     msg_box_success_body_text.value = `A total of ${webSerial.clone_fw_status.value - 1} devices were successfully cloned and had their drivers updated.`
 
-    msg_box_success.value = true
-    console.log("success")
+  //   msg_box_success.value = true
+  //   console.log("success")
+
+    const lines = progressbar_body_text.value.split('\n')
+    lines.pop() // remove last line
+    progressbar_body_text.value = lines.join('\n')
+
+
+    progress_show_close_button.value = true;
   }
   else {
+    progressbar_standard.value = false;
     msg_box_failed_body_text.value = "No devices were cloned successfully."
     msg_box_failed.value = true
     console.log("failed")

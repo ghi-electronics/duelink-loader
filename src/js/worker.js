@@ -378,6 +378,45 @@ async function do_driver_connect(devAdd) {
 
 }
 
+async function GetDeviceName() { // this issue when connect first device
+    await writer.write(encoder.encode("Info(0)\n"));
+    await sleep(100);
+    response = await flush();
+    if (response.length > 0) {
+        response.pop();
+
+        let c = response.pop();
+
+        const num = Number(c);
+
+        const hexStr = num.toString(16).toUpperCase().padStart(6, "0");
+
+        update_device_pid = "0x" + hexStr;
+
+    }
+
+    await loadDLJson();
+
+    const device = getDeviceByPID(update_device_pid);
+
+    if (device === "NA") {
+        console.log("NA");
+        return;
+    } else {
+        return device.name
+
+        // update_device_name = device.name;
+        // update_device_partNum = device.partNumber;
+        // update_driver_path = "https://raw.githubusercontent.com/ghi-electronics/duelink-website/refs/heads/dev/static/code/driver/" + update_device_partNum.toLowerCase() + ".txt";
+
+        // postMessage({ event: 'update_driver_path_msg', value: update_driver_path });
+        // postMessage({ event: 'driver_ver_msg', value: update_driver_ver });
+        // postMessage({ event: 'device_name_msg', value: update_device_name });
+        
+    }
+
+}
+
 async function do_driver_update() {
     do_driver_update_state = 0
     if (!isConnected || !update_can_update) {
@@ -526,7 +565,7 @@ async function clone_fw_single(from_addr) {
     postMessage({ event: 'progress_body_text', value: finished_str + `\nChecking if device ${from_addr + 1} exists…` });
     try {
 
-
+        current_device_name = await GetDeviceName();
         await write(`sel(${from_addr + 1})`, null, '\n', 1000)
 
         // try to read statled pin, if return 1 mean exist
@@ -537,8 +576,9 @@ async function clone_fw_single(from_addr) {
         if (result.length > 0) {
             const ret = Number(result.pop());
             if (ret > 0.1) {
+                next_device_name = await GetDeviceName();
                 await write(`sel(${from_addr})`, null, '\n', 1000)
-                postMessage({ event: 'progress_body_text', value: finished_str + `\nCloning firmware from device ${from_addr} to device ${from_addr + 1}...` });
+                postMessage({ event: 'progress_body_text', value: finished_str + `\nCloning firmware from ${current_device_name}(${from_addr}) to ${next_device_name}(${from_addr + 1})...` });
                 const cloned = await write(`clone()`, null, '\n', 40000)
 
                 if (cloned.length > 0) {
@@ -568,12 +608,16 @@ async function clone_fw_single(from_addr) {
 
 }
 
+let current_device_name = ""
+let next_device_name = ""
 async function do_clone_fw(add_start, add_end) {
     console.log(add_start);
     console.log(add_end);
     let d = add_start
 
-    finished_str = ""; // clear
+    current_device_name = await GetDeviceName();
+
+    finished_str = current_device_name? `${current_device_name}(${add_start}) detected\n`: ""; // clear    
 
     for (d = add_start; d < add_end; d++) {
         clone_fw_single_status = 0
@@ -614,7 +658,7 @@ async function do_clone_fw(add_start, add_end) {
             if (i < 95)
                 i = i + 5
             postMessage({ event: 'progress_percent', value: i });
-            postMessage({ event: 'progress_body_text', value: finished_str + `\nFound: ${update_device_name} at address ${d + 1}\nLoading the driver onto device...` });
+            postMessage({ event: 'progress_body_text', value: finished_str + `\n${update_device_name} detected at address ${d + 1}\nLoading the driver onto device...` });
             update_progressbar_percent = false
             await do_driver_update()
             update_progressbar_percent = true
@@ -624,8 +668,8 @@ async function do_clone_fw(add_start, add_end) {
                     i = 99
 
                 postMessage({ event: 'progress_percent', value: i });
-                postMessage({ event: 'progress_body_text', value: finished_str + `\nFound: ${update_device_name} at address ${d + 1}\nFinishing loading the driver…` });
-                finished_str = finished_str + `Finished: ${update_device_name} at address (${d + 1})`
+                postMessage({ event: 'progress_body_text', value: finished_str + `\n${update_device_name} detected at address ${d + 1}\nFinishing loading the driver…` });
+                finished_str = finished_str + `${update_device_name}(${d + 1}) updated`
                 finished_str += '\n'
 
                 if (d > 10) {
