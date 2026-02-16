@@ -565,7 +565,7 @@ async function clone_fw_single(from_addr) {
     postMessage({ event: 'progress_body_text', value: finished_str + `\nChecking if device ${from_addr + 1} exists…` });
     try {
 
-        current_device_name = await GetDeviceName();
+        //current_device_name = await GetDeviceName();
         await write(`sel(${from_addr + 1})`, null, '\n', 1000)
 
         // try to read statled pin, if return 1 mean exist
@@ -576,9 +576,9 @@ async function clone_fw_single(from_addr) {
         if (result.length > 0) {
             const ret = Number(result.pop());
             if (ret > 0.1) {
-                next_device_name = await GetDeviceName();
+                //next_device_name = await GetDeviceName();
                 await write(`sel(${from_addr})`, null, '\n', 1000)
-                postMessage({ event: 'progress_body_text', value: finished_str + `\nCloning firmware from ${current_device_name}(${from_addr}) to ${next_device_name}(${from_addr + 1})...` });
+                postMessage({ event: 'progress_body_text', value: finished_str + `\nCloning firmware from device(${from_addr}) to device(${from_addr + 1})...` });
                 const cloned = await write(`clone()`, null, '\n', 40000)
 
                 if (cloned.length > 0) {
@@ -668,7 +668,7 @@ async function do_clone_fw(add_start, add_end) {
                     i = 99
 
                 postMessage({ event: 'progress_percent', value: i });
-                postMessage({ event: 'progress_body_text', value: finished_str + `\n${update_device_name} detected at address ${d + 1}\nFinishing loading the driver…` });
+                postMessage({ event: 'progress_body_text', value: finished_str + `\n${update_device_name} detected at address ${d + 1}\nFinishing loading the driver...` });
                 finished_str = finished_str + `${update_device_name}(${d + 1}) updated`
                 finished_str += '\n'
 
