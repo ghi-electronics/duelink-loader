@@ -381,7 +381,7 @@ async function do_driver_connect(devAdd) {
 async function GetDeviceName() { // this issue when connect first device
     await writer.write(encoder.encode("Info(0)\n"));
     await sleep(100);
-    response = await flush();
+    let response = await flush();
     if (response.length > 0) {
         response.pop();
 
