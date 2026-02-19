@@ -38,8 +38,9 @@ export default function useWebSerial($refs, emitter) {
     const clone_fw_status=ref(0)
 
     const clone_fw_dev=ref(0)
-    
-    
+
+    const devicesChainList = ref([])
+    const add_device_chain_status=ref(0);
 
     let memoryRegionsCallback = null;
 
@@ -183,6 +184,26 @@ export default function useWebSerial($refs, emitter) {
         {
             worker.postMessage({ task: 'do_clone_fw', value1: add_start, value2: add_end });
         }  
+    }
+
+    
+    async function do_discover() {
+        if (isConnected.value == true)
+        {
+            devicesChainList.value = []
+            worker.postMessage({ task: 'do_discover' });
+        }  
+    }
+
+    // Function to add a device
+    function add_discover_device(address, name, firmwareVersion, image, detail) {
+        devicesChainList.value.push({
+            address: address,
+            name: name,
+            firmwareVersion: firmwareVersion,
+            image: image,
+            detail: detail
+        })
     }
 
 
@@ -416,6 +437,13 @@ export default function useWebSerial($refs, emitter) {
             case 'progress_title_text':
                 progress_body_text.value = data.value;
                 break;
+            case 'add_device_chain':
+                add_discover_device(data.address, data.name,data.firmwareVersion,data.image,data.detail)
+                break
+
+            case 'add_device_chain_status':
+                add_device_chain_status.value = data.value
+                break
         }
     }
 
@@ -454,6 +482,8 @@ export default function useWebSerial($refs, emitter) {
         clone_fw_dev,
         progress_body_text,
         progress_title_text,
+        devicesChainList,
+        add_device_chain_status,
         // Methods
         connect,
         disconnect,
@@ -471,5 +501,6 @@ export default function useWebSerial($refs, emitter) {
         driver_update,
         sendescape,
         do_clone_fw,
+        do_discover,
     };
 }

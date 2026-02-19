@@ -21,6 +21,7 @@ export default defineConfig({
                 main: resolve(__dirname, 'index.html'),                
                 update: resolve(__dirname, 'update.html'),
                 microblocks: resolve(__dirname, 'microblocks.html'),
+                discover: resolve(__dirname, 'discover.html'),
             },
         },
     },

@@ -91,6 +91,10 @@ addEventListener('message', (e) => {
         case 'do_clone_fw':
             do_clone_fw(e.data.value1, e.data.value2)
             break
+
+        case 'do_discover':
+            do_discover()
+            break;
     }
 });
 
@@ -263,13 +267,15 @@ async function do_sendescape() {
 // driver update
 let dl_json_data = null;
 async function loadDLJson() {
-    //const response = await fetch('https://www.duelink.com/duelink.json');
-    const response = await fetch('https://raw.githubusercontent.com/ghi-electronics/duelink-website/refs/heads/dev/static/duelink.json');
+    if (dl_json_data == null) {
+        //const response = await fetch('https://www.duelink.com/duelink.json');
+        const response = await fetch('https://raw.githubusercontent.com/ghi-electronics/duelink-website/refs/heads/dev/static/duelink.json');
 
-    const json = await response.json();
+        const json = await response.json();
 
-    // Ensure products array exists
-    dl_json_data = Array.isArray(json.products) ? json.products : [];
+        // Ensure products array exists
+        dl_json_data = Array.isArray(json.products) ? json.products : [];
+    }
 }
 
 function getDeviceByPID(pid) {
@@ -412,7 +418,7 @@ async function GetDeviceName() { // this issue when connect first device
         // postMessage({ event: 'update_driver_path_msg', value: update_driver_path });
         // postMessage({ event: 'driver_ver_msg', value: update_driver_ver });
         // postMessage({ event: 'device_name_msg', value: update_device_name });
-        
+
     }
 
 }
@@ -617,7 +623,7 @@ async function do_clone_fw(add_start, add_end) {
 
     current_device_name = await GetDeviceName();
 
-    finished_str = current_device_name? `${current_device_name}(${add_start}) detected\n`: ""; // clear    
+    finished_str = current_device_name ? `${current_device_name}(${add_start}) detected\n` : ""; // clear    
 
     for (d = add_start; d < add_end; d++) {
         clone_fw_single_status = 0
@@ -682,6 +688,124 @@ async function do_clone_fw(add_start, add_end) {
 
 
     postMessage({ event: 'clone_fw_status', value: (d) });
+}
+
+
+// Declare a reactive list (initially empty)
+//const devicesChain = ref([])
+let devicesChain = []
+
+// Function to add a device
+function addDevice(device) {
+     devicesChain.push(device)
+}
+
+
+async function do_discover_next(address) {
+    if (!isConnected)
+        return -1
+
+    const start = performance.now()
+
+    const ret = await write(`sel(${address})`, null, '\n', 1000)
+
+    const diff = performance.now() - start   
+
+    if (diff > 500) {
+        return -2
+    }
+
+    
+    await writer.write(encoder.encode("Info(0)\n"));
+    await sleep(100);
+    const response = await flush();
+    let pid = "";
+    if (response.length > 0) {
+        response.pop();
+
+        let c = response.pop();
+
+        const num = Number(c);
+
+        const hexStr = num.toString(16).toUpperCase().padStart(6, "0");
+
+        pid = "0x" + hexStr;
+
+    }
+
+    let json = await loadDLJson();
+
+    const device = getDeviceByPID(pid);
+
+    if (device === "NA") {
+        console.log("NA");
+        return;
+    } else {
+        const baseImgPath = 'https://www.duelink.com/img/catalog/'
+        const baseDocPath = 'https://www.duelink.com/docs/products/'
+        let partNumber = device.partNumber
+        let img_link = baseImgPath + partNumber.toLowerCase().slice(4) + "-1.webp"
+        let doc_link = baseDocPath + partNumber.toLowerCase().slice(4)
+
+        // check version
+        await writer.write(encoder.encode("Info(1)\n"));
+        await sleep(100);
+        const response = await flush();
+
+        let fw = 0.0;
+        if (response.length > 0) {
+            response.pop();
+
+            let c = response.pop();
+
+            fw = Number(c);                
+        }
+
+        if (fw > 0) {
+            addDevice({
+                address:address,
+                name: device.name,
+                firmwareVersion: fw,
+                image: img_link,
+                detail: doc_link
+            })
+
+            return 1
+        }
+
+                    
+    }
+    return -3
+
+}
+
+async function do_discover() {
+
+    if (isConnected) {
+        devicesChain = []
+        let address = 1
+        let count = 0
+        while (true) {
+            let ret = await do_discover_next(address)
+
+            if (ret < 0)
+                break
+
+            // post message to add device
+            let current_device = devicesChain[address-1]
+            postMessage({ event: 'add_device_chain', address: current_device.address, name: current_device.name, firmwareVersion: current_device.firmwareVersion, image: current_device.image, detail:current_device.detail });
+            count++
+            address++
+
+
+        }
+        postMessage({ event: 'add_device_chain_status', value: count})
+
+        return 1
+    }
+
+    postMessage({ event: 'add_device_chain_status', value: -1})
+
 }
 
 async function disconnect() {

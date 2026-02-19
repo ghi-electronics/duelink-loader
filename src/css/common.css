@@ -94,6 +94,11 @@ em {
   color: white;
 }
 
+.outline-button:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+  pointer-events: none;
+}
 /* ===== Misc ===== */
 
 .divider {
