@@ -30,7 +30,7 @@
       <div>
         <strong>Host:</strong> 
         <span v-if="device.dl_mode > 0" class="host-badge">Yes</span>
-        <span v-else class="host-badge">No</span>
+        <span v-else class="host-no">No</span>
       </div>
 
       <div>
@@ -269,8 +269,7 @@ async function fn_discover() {
 }
 
 /* Host card highlight */
-.host-card {
-  border: 2px solid #2563eb;
+.host-card {  
   background: linear-gradient(to right, #f0f7ff, #ffffff);
 }
 
@@ -278,6 +277,26 @@ async function fn_discover() {
 .host-badge {
   color: #ffffff;
   background-color: #2563eb;
+  padding: 4px 10px;
+  border-radius: 12px;
+  font-size: 13px;
+  font-weight: 600;
+  margin-left: 6px;
+}
+
+.host-yes {
+  background-color: #facc15;   /* yellow */
+  color: #1f2937;
+  padding: 4px 10px;
+  border-radius: 12px;
+  font-size: 13px;
+  font-weight: 600;
+  margin-left: 6px;
+}
+
+.host-no {
+  background-color: #e5e7eb;
+  color: #374151;
   padding: 4px 10px;
   border-radius: 12px;
   font-size: 13px;
