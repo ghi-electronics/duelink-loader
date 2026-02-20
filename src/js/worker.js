@@ -825,7 +825,7 @@ async function do_discover_next(host, address) {
                     //let current_device = devicesChain[address - 1]
                     postMessage({ event: 'add_device_chain', address: current_device.address, name: current_device.name, firmwareVersion: current_device.firmwareVersion, image: current_device.image, detail: current_device.detail, dl_mode: current_device.dl_mode  });
 
-                    await sleep(100) // wait for the page load image that takes time
+                    await sleep(250) // wait for the page load image that takes time
 
 
                     if (dl_mode == 2) {
