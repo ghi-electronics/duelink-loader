@@ -35,34 +35,64 @@
       </div>
     </div>
     <div class="devices-wrapper">
-      <div v-for="device in webSerial.devicesChainList.value" :key="device.address"
-        :class="['device-card', { 'host-card': device.dl_mode > 0 }]">
-        <div class="image-box">
-          <img :src="device.image" class="device-image" />
-        </div>
+      <div v-for="device in webSerial.devicesChainList.value" :key="device.address" class="device-row">
 
-        <div class="device-info">
-          <div><strong>Device Name:</strong> {{ device.name }}</div>
-          <div>
-            <strong>Device Address:</strong>
-            {{ device.parent_address > 0
-              ? `H${device.parent_address}-${device.address}`
-              : device.address }}
-          </div>
-          <div><strong>Firmware Version:</strong> {{ device.firmwareVersion }}</div>
+        <!-- IF host_deep < 2 → Normal Card -->
+        <template v-if="device.host_deep < 2">
 
-          <div>
-            <strong>Host:</strong>
-            <span v-if="device.dl_mode > 0" class="host-badge">Yes</span>
-            <span v-else class="host-no">No</span>
+          <div class="device-order">
+            {{ device.order }}
           </div>
 
-          <div>
-            <a :href="device.detail" target="_blank" rel="noopener noreferrer">
-              View Product Details
-            </a>
+          <div :class="['device-card', { 'host-card': device.dl_mode > 0 }]">
+            <div class="image-box">
+              <img :src="device.image" class="device-image" />
+            </div>
+
+            <div class="device-info">
+              <div class="device-name">{{ device.name }}</div>
+              <div><strong>PID:</strong> {{ device.pid }}</div>
+
+              <div>
+                <strong>Device Address:</strong>
+                {{ device.parent_address > 0
+                  ? `H${device.parent_address}-${device.address}`
+                  : device.address }}
+              </div>
+
+              <div><strong>Firmware Version:</strong> {{ device.firmwareVersion }}</div>
+
+              <div>
+                <strong>Host:</strong>
+                <span v-if="device.dl_mode > 0" class="host-badge">Yes</span>
+                <span v-else class="host-no">No</span>
+              </div>
+
+              <div>
+                <a :href="device.detail" target="_blank" rel="noopener noreferrer">
+                  View Product Details
+                </a>
+              </div>
+            </div>
           </div>
-        </div>
+
+        </template>
+
+        <!-- IF host_deep >= 2 → Warning Card -->
+        <template v-else>
+
+          <!-- <div class="device-order">
+            {{ device.order }}
+          </div> -->
+
+          <div class="device-card warning-card">
+            <div class="warning-text">
+              Second-level host detected. No further discovery is available.
+            </div>
+          </div>
+
+        </template>
+
       </div>
     </div>
 
@@ -220,8 +250,13 @@ async function fn_discover() {
     is_doing_discover.value = false
     button_text.value = "Discover"
 
-    if (webSerial.add_device_chain_status.value > 0) {
-      const count = webSerial.devicesChainList.value.length
+    if (webSerial.add_device_chain_status.value >= 0 && webSerial.devicesChainList.value.length>0) {
+      let count = webSerial.devicesChainList.value.length
+
+      if (webSerial.devicesChainList.value[count-1].host_deep >=2) {
+        count--
+      }
+
       msg_box_success_body_text.value = `${count} device${count === 1 ? '' : 's'} detected in the chain.`
       msg_box_success.value = true
 
@@ -236,9 +271,11 @@ function exportCSV() {
 
   if (!devices || devices.length === 0) return
 
-  // CSV header
+  // Header row
   const headers = [
+    "Order",
     "Device Name",
+    "PID",
     "Device Address",
     "Firmware Version",
     "Host",
@@ -246,43 +283,48 @@ function exportCSV() {
     "Product Detail Link"
   ]
 
-  // Convert rows
-  const rows = devices.map(device => [
-    device.name,
-    device.address,
-    device.firmwareVersion,
-    device.dl_mode > 0 ? "Yes" : "No",
-    device.image,
-    device.detail
-  ])
+  // Data rows
+  const rows = devices.map(device => {
+    const formattedAddress =
+      device.parent_address > 0
+        ? `H${device.parent_address}-${device.address}`
+        : device.address
 
-  // Combine header + rows
+    return [
+      device.order,
+      device.name,
+      device.pid,
+      formattedAddress,
+      device.firmwareVersion,
+      device.dl_mode > 0 ? "Yes" : "No",
+      device.image,
+      device.detail
+    ]
+  })
+
+  // Combine into CSV string
   const csvContent =
     [headers, ...rows]
       .map(row => row.map(value => `"${value}"`).join(","))
       .join("\n")
 
-  // Create file blob
+  // Create blob
   const blob = new Blob([csvContent], { type: "text/csv;charset=utf-8;" })
-
-  // Create download link
   const link = document.createElement("a")
   const url = URL.createObjectURL(blob)
 
-  link.href = url
-  //link.setAttribute("download", "duelink_devices.csv")
+  // Generate timestamp filename
   const now = new Date()
-
-  const mm = String(now.getMonth() + 1).padStart(2, '0')
-  const dd = String(now.getDate()).padStart(2, '0')
+  const mm = String(now.getMonth() + 1).padStart(2, "0")
+  const dd = String(now.getDate()).padStart(2, "0")
   const yy = String(now.getFullYear()).slice(-2)
-
-  const hh = String(now.getHours()).padStart(2, '0')
-  const min = String(now.getMinutes()).padStart(2, '0')
-  const ss = String(now.getSeconds()).padStart(2, '0')
+  const hh = String(now.getHours()).padStart(2, "0")
+  const min = String(now.getMinutes()).padStart(2, "0")
+  const ss = String(now.getSeconds()).padStart(2, "0")
 
   const filename = `duelink_devices_${mm}${dd}${yy}_${hh}${min}${ss}.csv`
 
+  link.href = url
   link.setAttribute("download", filename)
   document.body.appendChild(link)
   link.click()
@@ -415,5 +457,56 @@ function exportCSV() {
 /* When only one button */
 .button-row.single-button {
   justify-content: center;
+}
+
+.device-name {
+  font-weight: 700;
+  font-size: 1.2rem;
+  /* adjust size here */
+}
+
+/* Row container */
+.device-row {
+  display: flex;
+  align-items: center;
+  /* vertical center */
+  gap: 10px;
+  margin-bottom: 10px;
+}
+
+/* Order number styling */
+.device-order {
+  width: 40px;
+  text-align: center;
+  font-size: 28px;
+  font-weight: 700;
+  color: #6b7280;
+  /* soft gray */
+  flex-shrink: 0;
+}
+
+/* Make card take remaining width */
+.device-card {
+  flex: 1;
+}
+
+.warning-card {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: #fff7ed;
+  /* soft orange background */
+  border: 1px solid #fdba74;
+  min-height: 160px;
+}
+
+.warning-text {
+  font-size: 1.1rem;
+  font-weight: 600;
+  color: #c2410c;
+  /* dark orange */
+  text-align: center;
+  padding: 20px;
 }
 </style>

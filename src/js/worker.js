@@ -702,15 +702,16 @@ function addDevice(device) {
 
 let host_deep = 0
 let parent_address = 0
+let device_order = 0
 
 function buildHostCommand(sendCommandString) {
-  let result = sendCommandString
+    let result = sendCommandString
 
-  for (let i = 0; i < host_deep; i++) {
-    result = `cmd("${result}")`
-  }
+    for (let i = 0; i < host_deep; i++) {
+        result = `cmd("${result}")`
+    }
 
-  return result
+    return result
 }
 
 async function do_discover_next(address) {
@@ -804,6 +805,7 @@ async function do_discover_next(address) {
                 }
 
                 if (fw > 0) {
+                    device_order++
                     const current_device = {
                         address: address,
                         name: device.name,
@@ -811,7 +813,10 @@ async function do_discover_next(address) {
                         image: img_link,
                         detail: doc_link,
                         dl_mode: dl_mode == 2 ? 2 : 0,
-                        parent_address: parent_address
+                        parent_address: parent_address,
+                        pid: pid,
+                        order: device_order,
+                        host_deep: host_deep,
                     }
 
                     addDevice(current_device)
@@ -825,7 +830,7 @@ async function do_discover_next(address) {
                     // })
 
                     //let current_device = devicesChain[address - 1]
-                    postMessage({ event: 'add_device_chain', address: current_device.address, name: current_device.name, firmwareVersion: current_device.firmwareVersion, image: current_device.image, detail: current_device.detail, dl_mode: current_device.dl_mode, parent_address:current_device.parent_address  });
+                    postMessage({ event: 'add_device_chain', address: current_device.address, name: current_device.name, firmwareVersion: current_device.firmwareVersion, image: current_device.image, detail: current_device.detail, dl_mode: current_device.dl_mode, parent_address: current_device.parent_address, pid: current_device.pid, order: current_device.order, host_deep: current_device.host_deep });
 
                     await sleep(250) // wait for the page load image that takes time
 
@@ -836,19 +841,26 @@ async function do_discover_next(address) {
                         host_deep++
                         let current_host_deep = host_deep
                         parent_address = current_device.address
-                        while (true) {
-                            let ret = await do_discover_next(client_address)
 
-                            if (ret < 0 || (current_host_deep != host_deep)) // there is no two host have same levels in the chain
-                                break
+                        if (host_deep >= 2) { // not support more than 2 host
+                            postMessage({ event: 'add_device_chain', address: 0, name: "NA", firmwareVersion: 0, image: "NA", detail: "NA", dl_mode: 0, parent_address: 0, pid: 0, order: 0, host_deep: host_deep });    
+                            //return 1
+                        }
+                        else {
+                            while (true) {
+                                let ret = await do_discover_next(client_address)
 
-                            // post message to add device
-                            //let current_device = devicesChain[address - 1]
-                            //postMessage({ event: 'add_device_chain', address: current_device.address, name: current_device.name, firmwareVersion: current_device.firmwareVersion, image: current_device.image, detail: current_device.detail });
+                                if (ret < 0 || (current_host_deep != host_deep)) // there is no two host have same levels in the chain
+                                    break
 
-                            client_address++
+                                // post message to add device
+                                //let current_device = devicesChain[address - 1]
+                                //postMessage({ event: 'add_device_chain', address: current_device.address, name: current_device.name, firmwareVersion: current_device.firmwareVersion, image: current_device.image, detail: current_device.detail });
+
+                                client_address++
 
 
+                            }
                         }
 
                     }
@@ -873,6 +885,7 @@ async function do_discover() {
         let count = 0
         host_deep = 0
         parent_address = 0
+        device_order = 0
         let current_host_deep = host_deep
         while (true) {
             let ret = await do_discover_next(address)

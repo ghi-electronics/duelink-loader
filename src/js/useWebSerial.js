@@ -196,7 +196,7 @@ export default function useWebSerial($refs, emitter) {
     }
 
     // Function to add a device
-    function add_discover_device(address, name, firmwareVersion, image, detail,dl_mode,parent_address) {
+    function add_discover_device(address, name, firmwareVersion, image, detail,dl_mode,parent_address,pid,order,host_deep) {
         devicesChainList.value.push({
             address: address,
             name: name,
@@ -204,7 +204,10 @@ export default function useWebSerial($refs, emitter) {
             image: image,
             detail: detail,
             dl_mode: dl_mode,
-            parent_address:parent_address
+            parent_address:parent_address,
+            pid:pid,
+            order:order,
+            host_deep:host_deep
         })
     }
 
@@ -440,7 +443,7 @@ export default function useWebSerial($refs, emitter) {
                 progress_body_text.value = data.value;
                 break;
             case 'add_device_chain':
-                add_discover_device(data.address, data.name,data.firmwareVersion,data.image,data.detail,data.dl_mode,data.parent_address)
+                add_discover_device(data.address, data.name,data.firmwareVersion,data.image,data.detail,data.dl_mode,data.parent_address,data.pid,data.order,data.host_deep)
                 break
 
             case 'add_device_chain_status':
