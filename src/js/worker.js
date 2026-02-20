@@ -726,8 +726,8 @@ async function do_discover_next(host, address) {
     const diff = performance.now() - start
 
     if (diff > 500) {
-        //return -2
-        console.log("timeout")
+        return -2
+        //console.log("timeout")
     }
 
     //cmd = !host ? `Info(0)\n` : `cmd("Info(0)")\n`
@@ -830,19 +830,20 @@ async function do_discover_next(host, address) {
 
                     if (dl_mode == 2) {
                         // get client
-                        let host_address = 1
+                        let client_address = 1
                         host_deep++
+                        let current_host_deep = host_deep
                         while (true) {
-                            let ret = await do_discover_next(host_deep, host_address)
+                            let ret = await do_discover_next(host_deep, client_address)
 
-                            if (ret < 0)
+                            if (ret < 0 || (current_host_deep != host_deep)) // there is no two host have same levels in the chain
                                 break
 
                             // post message to add device
                             //let current_device = devicesChain[address - 1]
                             //postMessage({ event: 'add_device_chain', address: current_device.address, name: current_device.name, firmwareVersion: current_device.firmwareVersion, image: current_device.image, detail: current_device.detail });
 
-                            host_address++
+                            client_address++
 
 
                         }
@@ -868,10 +869,11 @@ async function do_discover() {
         let address = 1
         let count = 0
         host_deep = 0
+        let current_host_deep = host_deep
         while (true) {
             let ret = await do_discover_next(host_deep, address)
 
-            if (ret < 0)
+            if (ret < 0 || (current_host_deep != host_deep)) // there is no two host have same levels in the chain
                 break
 
             // post message to add device

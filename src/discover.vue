@@ -16,6 +16,24 @@
       </button>
     </div>
     <hr />
+    <div v-if="msg_box_success" class="overlay">
+      <div class="dialog">
+        <div class="dialog-title-success">
+          <i class="fas fa-check-circle" style="color: green; margin-right: 8px;"></i>
+          Discover
+        </div>
+        <div class="dialog-body">
+          <p>{{ msg_box_success_body_text }}</p>
+        </div>
+
+        <div class="dialog-buttons">
+          <button class="no" @click="
+            msg_box_success = false;
+
+          ">Close</button>
+        </div>
+      </div>
+    </div>
     <div class="devices-wrapper">
       <div v-for="device in webSerial.devicesChainList.value" :key="device.address"
         :class="['device-card', { 'host-card': device.dl_mode > 0 }]">
@@ -198,6 +216,11 @@ async function fn_discover() {
     button_text.value = "Discover"
 
     if (webSerial.add_device_chain_status.value > 0) {
+      const count = webSerial.devicesChainList.value.length
+      msg_box_success_body_text.value = `${count} device${count === 1 ? '' : 's'} detected in the chain.`
+      msg_box_success.value = true
+
+
       discover_done.value = true
     }
   }
