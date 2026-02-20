@@ -250,14 +250,18 @@ async function fn_discover() {
     is_doing_discover.value = false
     button_text.value = "Discover"
 
-    if (webSerial.add_device_chain_status.value >= 0 && webSerial.devicesChainList.value.length>0) {
+    if (webSerial.add_device_chain_status.value >= 0 && webSerial.devicesChainList.value.length > 0) {
       let count = webSerial.devicesChainList.value.length
 
-      if (webSerial.devicesChainList.value[count-1].host_deep >=2) {
+      if (webSerial.devicesChainList.value[count - 1].host_deep >= 2) {
         count--
       }
 
-      msg_box_success_body_text.value = `${count} device${count === 1 ? '' : 's'} detected in the chain.`
+      const message = count === 1
+        ? "1 device was detected in the chain."
+        : `${count} devices were detected in the chain.`
+
+      msg_box_success_body_text.value = message
       msg_box_success.value = true
 
 
