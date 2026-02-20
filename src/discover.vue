@@ -43,7 +43,12 @@
 
         <div class="device-info">
           <div><strong>Device Name:</strong> {{ device.name }}</div>
-          <div><strong>Device Address:</strong> {{ device.address }}</div>
+          <div>
+            <strong>Device Address:</strong>
+            {{ device.parent_address > 0
+              ? `H${device.parent_address}-${device.address}`
+              : device.address }}
+          </div>
           <div><strong>Firmware Version:</strong> {{ device.firmwareVersion }}</div>
 
           <div>
@@ -173,7 +178,7 @@ async function fn_discover() {
 
 
     if (conn) {
-      
+
       button_text.value = "Discovering device..." + percent_tmp.value + "%"
       await webSerial.do_discover()
 
@@ -268,17 +273,17 @@ function exportCSV() {
   //link.setAttribute("download", "duelink_devices.csv")
   const now = new Date()
 
-const mm = String(now.getMonth() + 1).padStart(2, '0')
-const dd = String(now.getDate()).padStart(2, '0')
-const yy = String(now.getFullYear()).slice(-2)
+  const mm = String(now.getMonth() + 1).padStart(2, '0')
+  const dd = String(now.getDate()).padStart(2, '0')
+  const yy = String(now.getFullYear()).slice(-2)
 
-const hh = String(now.getHours()).padStart(2, '0')
-const min = String(now.getMinutes()).padStart(2, '0')
-const ss = String(now.getSeconds()).padStart(2, '0')
+  const hh = String(now.getHours()).padStart(2, '0')
+  const min = String(now.getMinutes()).padStart(2, '0')
+  const ss = String(now.getSeconds()).padStart(2, '0')
 
-const filename = `duelink_devices_${mm}${dd}${yy}_${hh}${min}${ss}.csv`
+  const filename = `duelink_devices_${mm}${dd}${yy}_${hh}${min}${ss}.csv`
 
-link.setAttribute("download", filename)
+  link.setAttribute("download", filename)
   document.body.appendChild(link)
   link.click()
 

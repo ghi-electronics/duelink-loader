@@ -701,6 +701,7 @@ function addDevice(device) {
 }
 
 let host_deep = 0
+let parent_address = 0
 
 function buildHostCommand(sendCommandString) {
   let result = sendCommandString
@@ -712,7 +713,7 @@ function buildHostCommand(sendCommandString) {
   return result
 }
 
-async function do_discover_next(host, address) {
+async function do_discover_next(address) {
     if (!isConnected)
         return -1
 
@@ -809,7 +810,8 @@ async function do_discover_next(host, address) {
                         firmwareVersion: fw,
                         image: img_link,
                         detail: doc_link,
-                        dl_mode: dl_mode == 2 ? 2 : 0
+                        dl_mode: dl_mode == 2 ? 2 : 0,
+                        parent_address: parent_address
                     }
 
                     addDevice(current_device)
@@ -823,7 +825,7 @@ async function do_discover_next(host, address) {
                     // })
 
                     //let current_device = devicesChain[address - 1]
-                    postMessage({ event: 'add_device_chain', address: current_device.address, name: current_device.name, firmwareVersion: current_device.firmwareVersion, image: current_device.image, detail: current_device.detail, dl_mode: current_device.dl_mode  });
+                    postMessage({ event: 'add_device_chain', address: current_device.address, name: current_device.name, firmwareVersion: current_device.firmwareVersion, image: current_device.image, detail: current_device.detail, dl_mode: current_device.dl_mode, parent_address:current_device.parent_address  });
 
                     await sleep(250) // wait for the page load image that takes time
 
@@ -833,8 +835,9 @@ async function do_discover_next(host, address) {
                         let client_address = 1
                         host_deep++
                         let current_host_deep = host_deep
+                        parent_address = current_device.address
                         while (true) {
-                            let ret = await do_discover_next(host_deep, client_address)
+                            let ret = await do_discover_next(client_address)
 
                             if (ret < 0 || (current_host_deep != host_deep)) // there is no two host have same levels in the chain
                                 break
@@ -869,9 +872,10 @@ async function do_discover() {
         let address = 1
         let count = 0
         host_deep = 0
+        parent_address = 0
         let current_host_deep = host_deep
         while (true) {
-            let ret = await do_discover_next(host_deep, address)
+            let ret = await do_discover_next(address)
 
             if (ret < 0 || (current_host_deep != host_deep)) // there is no two host have same levels in the chain
                 break
