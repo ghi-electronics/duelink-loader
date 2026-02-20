@@ -3,44 +3,45 @@
     <h1>Discover</h1>
 
     <p>
-      This page will discovery devices in chain
+      Click Discover to scan and identify all devices in the chain.
     </p>
 
-    <div>
+    <div class="button-row" :class="{ 'single-button': !discover_done }">
       <button class="outline-button" @click="fn_discover" :disabled="is_doing_discover">
         {{ button_text }}
+      </button>
+
+      <button v-if="discover_done" class="outline-button" @click="exportCSV">
+        Export CSV
       </button>
     </div>
     <hr />
     <div class="devices-wrapper">
-  <div 
-    v-for="device in webSerial.devicesChainList.value" 
-    :key="device.address" 
-    :class="['device-card', { 'host-card': device.dl_mode > 0 }]"
-  >
-    <div class="image-box">
-      <img :src="device.image" class="device-image" />
-    </div>
+      <div v-for="device in webSerial.devicesChainList.value" :key="device.address"
+        :class="['device-card', { 'host-card': device.dl_mode > 0 }]">
+        <div class="image-box">
+          <img :src="device.image" class="device-image" />
+        </div>
 
-    <div class="device-info">
-      <div><strong>Device Name:</strong> {{ device.name }}</div>
-      <div><strong>Device Address:</strong> {{ device.address }}</div>
-      <div><strong>Firmware Version:</strong> {{ device.firmwareVersion }}</div>
+        <div class="device-info">
+          <div><strong>Device Name:</strong> {{ device.name }}</div>
+          <div><strong>Device Address:</strong> {{ device.address }}</div>
+          <div><strong>Firmware Version:</strong> {{ device.firmwareVersion }}</div>
 
-      <div>
-        <strong>Host:</strong> 
-        <span v-if="device.dl_mode > 0" class="host-badge">Yes</span>
-        <span v-else class="host-no">No</span>
+          <div>
+            <strong>Host:</strong>
+            <span v-if="device.dl_mode > 0" class="host-badge">Yes</span>
+            <span v-else class="host-no">No</span>
+          </div>
+
+          <div>
+            <a :href="device.detail" target="_blank" rel="noopener noreferrer">
+              View Product Details
+            </a>
+          </div>
+        </div>
       </div>
-
-      <div>
-        <a :href="device.detail" target="_blank" rel="noopener noreferrer">
-          View Product Details
-        </a>
-      </div>
     </div>
-  </div>
-</div>
 
     <Footer />
   </div>
@@ -78,6 +79,7 @@ const msg_box_failed_body_text = ref('')
 
 const percent_tmp = ref(0);
 const button_text = ref('Discover')
+const discover_done = ref(false)
 
 async function do_connect() {
   webSerial.connect_status.value = 0;
@@ -128,8 +130,13 @@ async function do_connect() {
 
 const is_doing_discover = ref(false)
 async function fn_discover() {
+  discover_done.value = false
   is_doing_discover.value = true
   button_text.value = "Please wait..."
+  webSerial.add_device_chain_status.value = -1
+
+
+  await sleep(100)
 
   try {
 
@@ -148,8 +155,7 @@ async function fn_discover() {
 
 
     if (conn) {
-      webSerial.add_device_chain_status.value = -1
-
+      
       button_text.value = "Discovering device..." + percent_tmp.value + "%"
       await webSerial.do_discover()
 
@@ -190,7 +196,71 @@ async function fn_discover() {
   finally {
     is_doing_discover.value = false
     button_text.value = "Discover"
+
+    if (webSerial.add_device_chain_status.value > 0) {
+      discover_done.value = true
+    }
   }
+}
+
+function exportCSV() {
+  const devices = webSerial.devicesChainList.value
+
+  if (!devices || devices.length === 0) return
+
+  // CSV header
+  const headers = [
+    "Device Name",
+    "Device Address",
+    "Firmware Version",
+    "Host",
+    "Image Link",
+    "Product Detail Link"
+  ]
+
+  // Convert rows
+  const rows = devices.map(device => [
+    device.name,
+    device.address,
+    device.firmwareVersion,
+    device.dl_mode > 0 ? "Yes" : "No",
+    device.image,
+    device.detail
+  ])
+
+  // Combine header + rows
+  const csvContent =
+    [headers, ...rows]
+      .map(row => row.map(value => `"${value}"`).join(","))
+      .join("\n")
+
+  // Create file blob
+  const blob = new Blob([csvContent], { type: "text/csv;charset=utf-8;" })
+
+  // Create download link
+  const link = document.createElement("a")
+  const url = URL.createObjectURL(blob)
+
+  link.href = url
+  //link.setAttribute("download", "duelink_devices.csv")
+  const now = new Date()
+
+const mm = String(now.getMonth() + 1).padStart(2, '0')
+const dd = String(now.getDate()).padStart(2, '0')
+const yy = String(now.getFullYear()).slice(-2)
+
+const hh = String(now.getHours()).padStart(2, '0')
+const min = String(now.getMinutes()).padStart(2, '0')
+const ss = String(now.getSeconds()).padStart(2, '0')
+
+const filename = `duelink_devices_${mm}${dd}${yy}_${hh}${min}${ss}.csv`
+
+link.setAttribute("download", filename)
+  document.body.appendChild(link)
+  link.click()
+
+  document.body.removeChild(link)
+  URL.revokeObjectURL(url)
 }
 
 
@@ -269,7 +339,7 @@ async function fn_discover() {
 }
 
 /* Host card highlight */
-.host-card {  
+.host-card {
   background: linear-gradient(to right, #f0f7ff, #ffffff);
 }
 
@@ -285,7 +355,8 @@ async function fn_discover() {
 }
 
 .host-yes {
-  background-color: #facc15;   /* yellow */
+  background-color: #facc15;
+  /* yellow */
   color: #1f2937;
   padding: 4px 10px;
   border-radius: 12px;
@@ -302,5 +373,19 @@ async function fn_discover() {
   font-size: 13px;
   font-weight: 600;
   margin-left: 6px;
+}
+
+.button-row {
+  display: flex;
+  align-items: center;
+  width: 300px;
+  max-width: 90%;
+  margin: 20px auto;
+  justify-content: space-between;
+}
+
+/* When only one button */
+.button-row.single-button {
+  justify-content: center;
 }
 </style>
