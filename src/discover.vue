@@ -76,8 +76,8 @@ async function do_connect() {
   const ret = await webSerial.connect(); // this just send a message, await or no, not really care
 
   if (ret) {
-    progressbar_body_text.value = "Connecting to device..."
-    progressbar_standard.value = true;
+    progressbar_body_text.value = "Connecting to devices..."
+    //progressbar_standard.value = true;
     percent_tmp.value = 0;
 
     while (webSerial.connect_status.value == 0) {
@@ -99,7 +99,7 @@ async function do_connect() {
     }
 
 
-    progressbar_standard.value = false;
+    //progressbar_standard.value = false;
     percent_tmp.value = 0;
     await sleep(100); // make sure connect_msgbox_progress is off
 
@@ -139,12 +139,12 @@ async function fn_discover() {
     if (conn) {
       webSerial.add_device_chain_status.value = -1
 
-      button_text.value = "Detecting devices..." + percent_tmp.value + "%"
+      button_text.value = "Discovering device..." + percent_tmp.value + "%"
       await webSerial.do_discover()
 
       percent_tmp.value = 0
       while (webSerial.add_device_chain_status.value == -1) {
-        button_text.value = "Detecting devices..." + percent_tmp.value + "%"
+        button_text.value = "Discovering device..." + percent_tmp.value + "%"
         await sleep(250)
 
         percent_tmp.value++
@@ -154,24 +154,24 @@ async function fn_discover() {
 
       }
 
-      if (webSerial.add_device_chain_status.value > 0) {
-        for (let i = 0; i < webSerial.add_device_chain_status.value; i++) {
-          console.log(`Device ${i}: ${webSerial.devicesChainList.value[i].name}`)
-          console.log(`Device ${i}: ${webSerial.devicesChainList.value[i].address}`)
-          console.log(`Device ${i}: ${webSerial.devicesChainList.value[i].firmwareVersion}`)
-          console.log(`Device ${i}: ${webSerial.devicesChainList.value[i].image}`) // link
-          console.log(`Device ${i}: ${webSerial.devicesChainList.value[i].detail}`) // link
-        }
-      }
-      else {
-        console.log("not detect any")
-      }
+      // if (webSerial.add_device_chain_status.value > 0) {
+      //   for (let i = 0; i < webSerial.add_device_chain_status.value; i++) {
+      //     console.log(`Device ${i}: ${webSerial.devicesChainList.value[i].name}`)
+      //     console.log(`Device ${i}: ${webSerial.devicesChainList.value[i].address}`)
+      //     console.log(`Device ${i}: ${webSerial.devicesChainList.value[i].firmwareVersion}`)
+      //     console.log(`Device ${i}: ${webSerial.devicesChainList.value[i].image}`) // link
+      //     console.log(`Device ${i}: ${webSerial.devicesChainList.value[i].detail}`) // link
+      //   }
+      // }
+      // else {
+      //   console.log("not detect any")
+      // }
 
       await webSerial.disconnect();
       await sleep(250);
 
-      button_text.value = "Finishing...100%"
-      await sleep(250);
+      button_text.value = "Finishing..."
+      await sleep(500);
 
     }
   }
