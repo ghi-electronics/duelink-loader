@@ -13,23 +13,34 @@
     </div>
     <hr />
     <div class="devices-wrapper">
-      <div v-for="device in webSerial.devicesChainList.value" :key="device.address" class="device-card">
-        <div class="image-box">
-          <img :src="device.image" class="device-image" />
-        </div>
+  <div 
+    v-for="device in webSerial.devicesChainList.value" 
+    :key="device.address" 
+    :class="['device-card', { 'host-card': device.dl_mode > 0 }]"
+  >
+    <div class="image-box">
+      <img :src="device.image" class="device-image" />
+    </div>
 
-        <div class="device-info">
-          <div><strong>Device Name:</strong> {{ device.name }}</div>
-          <div><strong>Device Address:</strong> {{ device.address }}</div>
-          <div><strong>Firmware Version:</strong> {{ device.firmwareVersion }}</div>
-          <div>
-            <a :href="device.detail" target="_blank" rel="noopener noreferrer">
-              View Product Details
-            </a>
-          </div>
-        </div>
+    <div class="device-info">
+      <div><strong>Device Name:</strong> {{ device.name }}</div>
+      <div><strong>Device Address:</strong> {{ device.address }}</div>
+      <div><strong>Firmware Version:</strong> {{ device.firmwareVersion }}</div>
+
+      <div>
+        <strong>Host:</strong> 
+        <span v-if="device.dl_mode > 0" class="host-badge">Yes</span>
+        <span v-else class="host-badge">No</span>
+      </div>
+
+      <div>
+        <a :href="device.detail" target="_blank" rel="noopener noreferrer">
+          View Product Details
+        </a>
       </div>
     </div>
+  </div>
+</div>
 
     <Footer />
   </div>
@@ -255,5 +266,22 @@ async function fn_discover() {
 
 .device-info a:hover {
   text-decoration: underline;
+}
+
+/* Host card highlight */
+.host-card {
+  border: 2px solid #2563eb;
+  background: linear-gradient(to right, #f0f7ff, #ffffff);
+}
+
+/* Small host badge */
+.host-badge {
+  color: #ffffff;
+  background-color: #2563eb;
+  padding: 4px 10px;
+  border-radius: 12px;
+  font-size: 13px;
+  font-weight: 600;
+  margin-left: 6px;
 }
 </style>
