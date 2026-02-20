@@ -16,6 +16,7 @@
       </button>
     </div>
     <hr />
+    
     <div v-if="msg_box_success" class="overlay">
       <div class="dialog">
         <div class="dialog-title-success">
@@ -34,6 +35,26 @@
         </div>
       </div>
     </div>
+
+    <div v-if="msg_box_failed" class="overlay">
+      <div class="dialog">
+        <div class="dialog-title">
+          <i class="fa-solid fa-triangle-exclamation" style="color: #f5c542; margin-right: 8px;"></i>
+          Failed
+        </div>
+        <div class="dialog-body">
+          <p>{{ msg_box_failed_body_text }}</p>
+        </div>
+
+        <div class="dialog-buttons">
+          <button class="no" @click="
+            msg_box_failed = false;
+
+          ">Close</button>
+        </div>
+      </div>
+    </div>
+
     <div class="devices-wrapper">
       <div v-for="device in webSerial.devicesChainList.value" :key="device.address" class="device-row">
 
@@ -139,8 +160,9 @@ async function do_connect() {
   webSerial.connection_mode.value = 0; // regular mode
   percent_tmp.value = 0;
   webSerial.progress_percent.value = 0;
+  webSerial.connect_dl_mb.value = 1
   const ret = await webSerial.connect(); // this just send a message, await or no, not really care
-
+  let pid = 0
   if (ret) {
     progressbar_body_text.value = "Connecting to devices..."
     //progressbar_standard.value = true;
@@ -155,6 +177,8 @@ async function do_connect() {
       // when percent_tmp.value is 65, get version() then 100
       // if 71 then failed
       if (percent_tmp.value == 71) { // make sure it is stop
+        pid = webSerial.eraseall_vid_dms.value & 0xFFFF
+
         break;
       }
     }
@@ -171,7 +195,15 @@ async function do_connect() {
 
     if (webSerial.connect_status.value < 0) {
 
-      msg_box_failed_body_text.value = "Connection failed"
+      if (pid == MB_PID) {
+        
+        msg_box_failed_body_text.value = "MicroBlocks firmware detected. The Discover feature does not support MicroBlocks firmware."
+      }
+      else {
+        //dms_confirm_final_text.value = "MicroBlocks " + ERASE_ALL_DMS_CONFIRM_FINAL_TEXT;
+        msg_box_failed_body_text.value = "Connection failed. If the device is running a while loop, ensure that Asio(1) is used."
+      }
+      
       msg_box_failed.value = true;
 
     }

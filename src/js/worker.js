@@ -125,6 +125,19 @@ async function connect() {
                 stopBits: 1,
                 flowControl: 'none',
             });
+
+            const info = port.getInfo();
+
+            if (info.usbVendorId == GHI_VID && info.usbProductId == MB_PID ) {
+                //postMessage({ event: 'ConnectFailed', message: "Unable to detect DUELink firmware.", name: "Device is busy" });
+
+                postMessage({ event: 'eraseall_vid_dms', value: ((info.usbVendorId << 16) | info.usbProductId) });
+                postMessage({ event: 'progress_percent', value: 71 }); // 71 is mark failed                
+
+                disconnect();
+
+                return
+            }
         }
         else {
             console.log('port. return');

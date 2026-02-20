@@ -41,6 +41,7 @@ export default function useWebSerial($refs, emitter) {
 
     const devicesChainList = ref([])
     const add_device_chain_status=ref(0);
+    const connect_dl_mb = ref(0);
 
     let memoryRegionsCallback = null;
 
@@ -77,11 +78,22 @@ export default function useWebSerial($refs, emitter) {
 
         try {
             //const available = await navigator.serial.getPorts(); // this refresh port only
-            await navigator.serial.requestPort({ 
-                filters: [
-                    { usbVendorId: GHI_VID, usbProductId:DL_PID } // GHI Electronics VID           
-                ]
-             });
+            if (connect_dl_mb.value != 0) {
+                connect_dl_mb.value = 0
+                    await navigator.serial.requestPort({ 
+                    filters: [
+                        { usbVendorId: GHI_VID, usbProductId:DL_PID }, // Dueliink   
+                        { usbVendorId: GHI_VID, usbProductId:MB_PID } // Microblock    
+                    ]
+                });
+            }
+            else {
+                await navigator.serial.requestPort({ 
+                    filters: [
+                        { usbVendorId: GHI_VID, usbProductId:DL_PID } // GHI Electronics VID           
+                    ]
+                });
+            }
         } catch (error) {
             logError(error?.message || 'Unable to request port.');
             isBusy.value = false;
@@ -489,6 +501,7 @@ export default function useWebSerial($refs, emitter) {
         progress_title_text,
         devicesChainList,
         add_device_chain_status,
+        connect_dl_mb,
         // Methods
         connect,
         disconnect,
