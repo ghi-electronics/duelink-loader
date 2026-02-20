@@ -701,23 +701,37 @@ function addDevice(device) {
 }
 
 let host_deep = 0
+
+function buildHostCommand(sendCommandString) {
+  let result = sendCommandString
+
+  for (let i = 0; i < host_deep; i++) {
+    result = `cmd("${result}")`
+  }
+
+  return result
+}
+
 async function do_discover_next(host, address) {
     if (!isConnected)
         return -1
 
     const start = performance.now()
 
-    let cmd = !host ? `sel(${address})` : `cmd("sel(${address})")`
+    //let cmd = !host ? `sel(${address})` : `cmd("sel(${address})")`
+    let cmd = buildHostCommand(`sel(${address})`)
 
     const ret = await write(cmd, null, '\n', 1000)
 
     const diff = performance.now() - start
 
     if (diff > 500) {
-        return -2
+        //return -2
+        console.log("timeout")
     }
 
-    cmd = !host ? `Info(0)\n` : `cmd("Info(0)")\n`
+    //cmd = !host ? `Info(0)\n` : `cmd("Info(0)")\n`
+    cmd = buildHostCommand(`Info(0)`) + '\n'
     await writer.write(encoder.encode(cmd));
     await sleep(100);
     let response = await flush();
@@ -737,7 +751,8 @@ async function do_discover_next(host, address) {
 
     if (pid != "") {
 
-        cmd = !host ? `Info(3)\n` : `cmd("Info(3)")\n`
+        //cmd = !host ? `Info(3)\n` : `cmd("Info(3)")\n`
+        cmd = buildHostCommand(`Info(3)`) + '\n'
         await writer.write(encoder.encode(cmd));
         await sleep(100);
         response = await flush();
@@ -772,7 +787,8 @@ async function do_discover_next(host, address) {
                 let doc_link = baseDocPath + partNumber.toLowerCase().slice(4)
 
                 // check version
-                cmd = !host ? `Info(1)\n` : `cmd("Info(1)")\n`
+                //cmd = !host ? `Info(1)\n` : `cmd("Info(1)")\n`
+                cmd = buildHostCommand(`Info(1)`) + '\n'
                 await writer.write(encoder.encode(cmd));
                 await sleep(100);
                 const response = await flush();
@@ -851,8 +867,9 @@ async function do_discover() {
         devicesChain = []
         let address = 1
         let count = 0
+        host_deep = 0
         while (true) {
-            let ret = await do_discover_next(false, address)
+            let ret = await do_discover_next(host_deep, address)
 
             if (ret < 0)
                 break
