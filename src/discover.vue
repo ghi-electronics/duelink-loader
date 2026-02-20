@@ -241,12 +241,12 @@ async function fn_discover() {
 
     if (conn) {
 
-      button_text.value = "Discovering device..." + percent_tmp.value + "%"
+      button_text.value = `Scanning devices... ${percent_tmp.value}%`
       await webSerial.do_discover()
 
       percent_tmp.value = 0
       while (webSerial.add_device_chain_status.value == -1) {
-        button_text.value = "Discovering device..." + percent_tmp.value + "%"
+        button_text.value = `Scanning devices... ${percent_tmp.value}%`
         await sleep(250)
 
         percent_tmp.value++
