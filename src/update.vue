@@ -98,7 +98,7 @@
     <h2 >Step 3: Update Chain</h2>
 
     <p>
-      This optional step uses the first moudle to update all other modules in a chain (Daisylink).
+      This optional step uses the first module to update all other modules in a chain (Daisylink).
     </p>
 
     <p>
