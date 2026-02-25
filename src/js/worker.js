@@ -210,7 +210,7 @@ async function eraseall_dms_execute() {
         await sleep(700);
         postMessage({ event: 'eraseall_status_dms', value: 2 });
 
-        await disconnect();
+        //await disconnect();
 
     }
 
