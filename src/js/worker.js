@@ -197,15 +197,24 @@ async function eraseall_dms_execute() {
         await do_sendescape();
         await sleep(400);
 
+        const ret = await write("Info(3)")
+        
+        if (ret > 1) {
+            await write(`cmd("setadd(0)")`)
+            await sleep(500);
+        }
+
         await writer.write(encoder.encode("reset(1)\n"));
         await sleep(100);
         await writer.write(encoder.encode("reset(1)\n"));
         await sleep(700);
         postMessage({ event: 'eraseall_status_dms', value: 2 });
 
+        await disconnect();
+
     }
 
-    //await disconnect();
+    
 }
 
 async function eraseall_dms_connect(devAdd) {
@@ -259,12 +268,22 @@ async function eraseall_dms_connect(devAdd) {
         writer = port.writable.getWriter();
         postMessage({ event: 'eraseall_vid_dms', value: ((info.usbVendorId << 16) | info.usbProductId) });
 
+        if (info.usbProductId == DL_PID) {
+            reader = port.readable.getReader();
+
+            startReadLoop();
+            await sleep(200);
+        }
+
     }
 
     update_devaddr = devAdd;
-    await writer.write(encoder.encode(`sel(${update_devaddr})\n`));
-    await sleep(50);
-    await flush();
+
+    if (info.usbProductId == DL_PID) {         
+        await writer.write(encoder.encode(`sel(${update_devaddr})\n`));
+        await sleep(50);
+        await flush();
+    }
 
     postMessage({ event: 'eraseall_status_dms', value: 1 });
 
