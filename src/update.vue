@@ -375,8 +375,12 @@ async function fn_erase_all_dms_final_yes() {
   await webSerial.eraseall_dms_execute();
 
   while (webSerial.eraseall_status_dms.value < 2) {
-    await sleep(250);
-    percent_tmp.value = 50
+    await sleep(100);
+    percent_tmp.value = webSerial.progress_percent.value
+    if (percent_tmp.value == 60) // We mark 60 mean detected a host
+    {
+        progressbar_body_text.value = "Host detected. Clearing the chain address..."
+    }
   }
   percent_tmp.value = 100
   progressbar_title_text.value = "Done"  

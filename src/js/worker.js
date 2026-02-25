@@ -183,34 +183,44 @@ async function connect() {
 }
 
 async function eraseall_dms_execute() {
+    postMessage({ event: 'progress_percent', value: 10 });
     const info = port.getInfo();
 
+    postMessage({ event: 'progress_percent', value: 20 });
     if (info.usbVendorId == GHI_VID && info.usbProductId == MB_PID) {
         await writer.write(new Uint8Array([0xFA, 0x0F, 0xC7]));
         await sleep(200);
+        postMessage({ event: 'progress_percent', value: 90 });
         postMessage({ event: 'eraseall_status_dms', value: 2 });
     }
     else if (info.usbVendorId == GHI_VID && info.usbProductId == DL_PID) {
+        postMessage({ event: 'progress_percent', value: 30 });
         await writer.write(encoder.encode("\n"));
         await sleep(400);
 
+        postMessage({ event: 'progress_percent', value: 40 });
         await do_sendescape();
         await sleep(400);
 
+        postMessage({ event: 'progress_percent', value: 50 });
         const ret = await write("Info(3)")
         
         if (ret > 1) {
+            postMessage({ event: 'progress_percent', value: 60 });
             await write(`cmd("setadd(0)")`)
             await sleep(500);
         }
 
+        postMessage({ event: 'progress_percent', value: 70 });
         await writer.write(encoder.encode("reset(1)\n"));
         await sleep(100);
+        postMessage({ event: 'progress_percent', value: 80 });
         await writer.write(encoder.encode("reset(1)\n"));
         await sleep(700);
+        postMessage({ event: 'progress_percent', value: 90 })
         postMessage({ event: 'eraseall_status_dms', value: 2 });
 
-        //await disconnect();
+        //await disconnect(); 
 
     }
 
@@ -653,7 +663,7 @@ async function do_clone_fw(add_start, add_end) {
     console.log(add_end);
     let d = add_start
 
-    current_device_name = await GetDeviceName();
+    current_device_name = await GetDeviceName(); 
 
     finished_str = current_device_name ? `${current_device_name}(${add_start}) detected\n` : ""; // clear    
 
