@@ -440,6 +440,7 @@ async function fn_load_driver_yes() {
     //webSerial.isBusy.value = true;
 
     webSerial.connection_mode.value = 1; // driver mode    
+    webSerial.connected_device_pid.value = 0;
     const ret = await webSerial.driver_connect();
 
     if (ret) {
@@ -498,11 +499,20 @@ async function fn_load_driver_yes() {
           progressbar_standard.value = false;
 
           await do_update_driver_final_yes()
-        }
+        }        
       }
 
       progressbar_standard.value = false;
       percent_tmp.value = 0;
+
+      if ((webSerial.connected_device_pid.value & 0xF00000) == 0xF00000) {
+        msg_box_failed_body_text.value = 
+        `PID invalid: 0x${Number(webSerial.connected_device_pid.value)
+          .toString(16)
+          .toUpperCase()
+          .padStart(6, '0')}`;
+        msg_box_failed.value = true;
+      }
 
       //webSerial.isBusy.value = tmp;
     }

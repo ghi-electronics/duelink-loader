@@ -42,6 +42,7 @@ export default function useWebSerial($refs, emitter) {
     const devicesChainList = ref([])
     const add_device_chain_status=ref(0);
     const connect_dl_mb = ref(0);
+    const connected_device_pid = ref(0);
 
     let memoryRegionsCallback = null;
 
@@ -461,6 +462,9 @@ export default function useWebSerial($refs, emitter) {
             case 'add_device_chain_status':
                 add_device_chain_status.value = data.value
                 break
+            case 'connected_device_pid':
+                connected_device_pid.value = data.value
+                break
         }
     }
 
@@ -502,6 +506,7 @@ export default function useWebSerial($refs, emitter) {
         devicesChainList,
         add_device_chain_status,
         connect_dl_mb,
+        connected_device_pid,
         // Methods
         connect,
         disconnect,

@@ -402,6 +402,7 @@ async function do_driver_connect(devAdd) {
 
         update_device_pid = "0x" + hexStr;
 
+        postMessage({ event: 'connected_device_pid', value: num });
     }
 
     await loadDLJson();
