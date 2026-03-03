@@ -157,6 +157,27 @@
       </div>
     </div>
 
+    <div v-if="msg_box_success_link" class="overlay">
+      <div class="dialog">
+        <div class="dialog-title-success">
+          <i class="fas fa-check-circle" style="color: green; margin-right: 8px;"></i>
+          Success
+        </div>
+        <div class="dialog-body">
+          <p>
+            <a target="_blank" :href="webSerial.update_driver_path.value"> Driver </a> loaded successfully.
+          </p>
+        </div>
+
+        <div class="dialog-buttons">
+          <button class="no" @click="
+            msg_box_success_link = false;
+
+          ">Close</button>
+        </div>
+      </div>
+    </div>
+
     <div v-if="msg_box_failed" class="overlay">
       <div class="dialog">
         <div class="dialog-title">
@@ -316,6 +337,7 @@ const MB_PID = 0xF301;
 const msg_box_erase_all_dms_confirm_final = ref(false);
 
 const msg_box_success = ref(false);
+const msg_box_success_link = ref(false);
 const msg_box_failed = ref(false);
 const msg_box_load_driver_confirm = ref(false);
 const progressbar_standard = ref(false);
@@ -470,10 +492,12 @@ async function fn_load_driver_yes() {
           do_update_driver_confirm_final_text3.value = "Firmware Version: " + webSerial.version.value;// + "-" +  (firmwareMatches.value)
 
 
-          msg_box_update_driver_show_detail.value = true;
+          //msg_box_update_driver_show_detail.value = true;
 
           percent_tmp.value = 100;
           progressbar_standard.value = false;
+
+          await do_update_driver_final_yes()
         }
       }
 
@@ -512,8 +536,10 @@ async function do_update_driver_final_yes() {
 
   progressbar_standard.value = false;
 
-  msg_box_success_body_text.value = "Load driver completed."
-  msg_box_success.value = true;
+  //msg_box_success_body_text.value = "Load driver completed."
+  //msg_box_success.value = true;
+
+  msg_box_success_link.value = true;
 
 }
 
