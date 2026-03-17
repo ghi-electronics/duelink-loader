@@ -132,7 +132,7 @@ import Footer from './components/Footer.vue';
   max-width: 700px;
   margin: 0 auto;
   font-size: 1rem;
-  color: #556;
+  color: #555;
 }
 
 </style>
