@@ -165,7 +165,7 @@
         </div>
         <div class="dialog-body">
           <p>
-            <a target="_blank" :href="webSerial.update_driver_path.value"> Driver </a> loaded successfully.
+            <a target="_blank" :href="webSerial.update_driver_path.value">Driver</a> loaded successfully.
           </p>
         </div>
 
