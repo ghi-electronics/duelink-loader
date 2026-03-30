@@ -176,3 +176,37 @@ em {
 .progress-text {
   white-space: pre-line;
 }
+
+
+.breadcrumb {
+  text-align: left;
+  margin-bottom: 10px;
+
+  font-size: 1.1rem;
+  color: #6b7280;
+}
+
+/* Home */
+.crumb-link {
+  color: #374151;
+  text-decoration: none;
+  font-weight: 500;
+  font-family: inherit;      /* match Discover font */
+}
+
+.crumb-link:hover {
+  text-decoration: underline;
+}
+
+/* separator */
+.crumb-separator {
+  margin: 0 6px;
+  color: #9ca3af;
+}
+
+/* current */
+.crumb-current {
+  font-weight: 700;
+  color: #111827;
+  font-family: inherit;      /* match Discover font */
+}

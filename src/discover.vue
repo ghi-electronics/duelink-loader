@@ -1,5 +1,12 @@
 <template>
+  
   <div class="page">
+    <div class="breadcrumb">
+      <a href="./" class="crumb-link">Home</a>
+      <span class="crumb-separator">›</span>
+      <span class="crumb-current">Discover</span>
+    </div>
+    
     <h1>Discover</h1>
 
     <p>
@@ -81,7 +88,18 @@
                   : device.address }}
               </div>
 
-              <div><strong>Firmware Version:</strong> {{ device.firmwareVersion }}</div>
+             <div>
+  <strong>Firmware Version:</strong>
+
+  <span :style="{ color: IsLatestFirmware(device.firmwareVersion) ? 'black' : 'red' }">
+    {{ device.firmwareVersion }}
+  </span>
+
+  <span v-if="!IsLatestFirmware(device.firmwareVersion)"
+        style="color: red; margin-left: 6px;">
+    Outdated
+  </span>
+</div>
 
               <div>
                 <strong>Host:</strong>
@@ -127,6 +145,7 @@ import useWebSerial from './js/useWebSerial.js';
 import mitt from "mitt";
 import Footer from './components/Footer.vue';
 
+
 const $refs = { editor: null, filename: null, input: null, progress: null };
 
 const emitter = mitt();
@@ -154,6 +173,83 @@ const msg_box_failed_body_text = ref('')
 const percent_tmp = ref(0);
 const button_text = ref('Discover')
 const discover_done = ref(false)
+
+const latestVersion = ref('')
+async function GetLatestFirmware() {
+  try {
+        if (latestVersion.value === "") {
+          const response = await fetch("https://www.duelink.com/duelink-fw.json");
+
+          if (!response.ok) {
+              throw new Error("Failed to fetch firmware data");
+          }
+
+          const data = await response.json();
+
+          // Safety check
+          if (!data.DUELink || !Array.isArray(data.DUELink.versions)) {
+              throw new Error("Invalid firmware JSON structure");
+          }
+
+          const versions = data.DUELink.versions;
+
+          // Find version with highest id
+          const latest = versions.reduce((max, current) =>
+              current.id > max.id ? current : max
+          );
+
+          // Compare firmware string
+          // Normalize both versions before compare
+          //const latestVersion = NormalizeVersion(latest.name);
+          //const deviceVersion = NormalizeVersion(deviceFirmware);
+          latestVersion.value = NormalizeVersion(latest.name)
+          
+          return latestVersion.value;
+        }
+
+        
+
+    } catch (error) {
+        console.error("Firmware check error:", error);
+        
+    }
+    return ""; 
+
+}
+
+onMounted(() => {
+  GetLatestFirmware();
+});
+
+function IsLatestFirmware(deviceFirmware) {
+    try {
+        if (latestVersion.value === "") {
+          return false
+        }
+
+        const deviceVersion = NormalizeVersion(deviceFirmware);
+        const isLatest = deviceVersion === latestVersion.value
+        return isLatest;
+
+    } catch (error) {
+        console.error("Firmware check error:", error);
+        
+    }
+
+    return false; // safest fallback
+}
+
+function NormalizeVersion(versionString) {
+
+      if (versionString === null || versionString === undefined)
+    return "";
+
+  let v = String(versionString).trim().replace(/^v/i, "");
+
+  const match = v.match(/^\d+(\.\d+)+/);
+
+  return match ? match[0] : v;
+  }
 
 async function do_connect() {
   webSerial.connect_status.value = 0;
@@ -545,4 +641,5 @@ function exportCSV() {
   text-align: center;
   padding: 20px;
 }
+
 </style>

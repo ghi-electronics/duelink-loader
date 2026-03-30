@@ -1,5 +1,11 @@
 <template>
   <div class="page">
+    <div class="breadcrumb">
+      <a href="./" class="crumb-link">Home</a>
+      <span class="crumb-separator">›</span>
+      <span class="crumb-current">DUELink Loader</span>
+    </div>
+
     <h1 class="title">DUELink Loader</h1>
 
     <p>

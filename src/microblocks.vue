@@ -1,10 +1,17 @@
 <template>
   <div class="page">
+    <div class="breadcrumb">
+      <a href="./" class="crumb-link">Home</a>
+      <span class="crumb-separator">›</span>
+      <span class="crumb-current">MicroBlocks</span>
+    </div>
+
     <h1>MicroBlocks Firmware Loader</h1>
     
     <p>
-      This page will load MicroBlocks firmware on a single device,
-      or on the first device in a chain.
+      Do you have Daisylink of modules? Update the chain first using <a href="/update">this page!</a>
+      <br/>
+      MicroBlocks firmware only runs on the first module.
     </p>
 
     <img
@@ -12,10 +19,7 @@
       alt="cincobit daisylinked"
     />
 
-    <p>
-      If you need to update the DUELink firmware on chained modules,
-      do that first on the <a href="/update">DUELink update page</a>.
-    </p>
+    
     
   <hr/>
     <!-- STEP 1 -->
