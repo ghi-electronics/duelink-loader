@@ -44,8 +44,7 @@
           class="card-image"
         />
         <p>
-          MicroBlocks users will use this to update a single module
-          or a chain of DUELink modules.
+          Use this option when using MicroBlocks
         </p>
 
         <a href="./microblocks">
